@@ -1,0 +1,13 @@
+export const SET_YATOKEN = 'TOKEN/SET_YATOKEN';
+
+export const CHANGE_SANDBOX = 'SANDBOX/CHANGE_SANDBOX';
+
+export const GET_POOLS = 'POOLS/GET_POOLS';
+export const REFRESH_POOLS = 'POOLS/REFRESH_POOLS';
+export const OPEN_POOL = 'POOLS/OPEN_POOL'; 
+export const CLOSE_POOL = 'POOLS/CLOSE_POOL'; 
+
+export const SHOW_SPINNER = 'APP/SHOW_SPINNER';
+export const HIDE_SPINNER = 'APP/HIDE_SPINNER';
+export const SET_ERROR = 'APP/SET_ERROR';
+export const RESET_ERROR = 'APP/RESET_ERROR';
