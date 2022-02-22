@@ -1,4 +1,4 @@
-import { HIDE_SPINNER, RESET_ERROR, SET_ERROR, SHOW_SPINNER } from "./types";
+import { HIDE_SPINNER, RESET_ERROR, SET_ERROR, SHOW_SPINNER } from "../types";
 
 const initialState = {poolsLoading: false, latestError: null};
 

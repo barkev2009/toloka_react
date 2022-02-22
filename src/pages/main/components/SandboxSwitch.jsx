@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux';
-import { changeSandbox } from '../../../redux/actions';
+import { changeSandbox } from '../../../redux/actions/sandboxActions';
 
 const SandboxSwitch = ({changeSandbox, sandbox}) => {
 

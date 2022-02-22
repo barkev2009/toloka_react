@@ -1,17 +1,20 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { openClosePool } from '../../../redux/actions';
+import { useSelector, useDispatch } from 'react-redux';
+import { readImagesFromPool } from '../../../redux/actions/imageActions';
+import { openClosePool, setActivePool } from '../../../redux/actions/poolActions';
 import '../styles/PoolItem.css';
 
 const PoolItem = ({data}) => {
 
   const [theme, setTheme] = useState('');
   const [btnTheme, setBtnTheme] = useState('');
-
+ 
   const dispatch = useDispatch();
   const token = useSelector(state => state.token.yaToken)
   const sandbox = useSelector(state => state.sandbox.sandboxOn)
+  const poolImages = useSelector(state => state.images.images.filter(item => item.pool_id === data.id)[0])
+  const imagesAvailable = poolImages !== undefined ? poolImages.images.length : 0
 
   const onClick = () => {
     dispatch(openClosePool(
@@ -19,6 +22,26 @@ const PoolItem = ({data}) => {
       sandbox, 
       data.id,
       data.status === 'OPEN' ? 'close' : 'open'));
+  }
+
+  const downloadImage = (sandbox, token, file_id, file_name) => {
+    axios({
+      method: 'GET',
+      url: 'http://127.0.0.1:8000/download_image/',
+      params : {
+        sandbox,
+        token,
+        file_id,
+        file_name
+      },
+    })
+  }
+
+  const downloadImages = () => {
+    poolImages.images.forEach(img => {
+      downloadImage(sandbox, token, img.id, img.name);
+    });
+    dispatch(setActivePool(data.id))
   }
 
   useEffect(
@@ -43,7 +66,12 @@ const PoolItem = ({data}) => {
       }
     }, [data.status]
   )
-
+  
+  useEffect(
+    () => {
+      dispatch(readImagesFromPool(token, sandbox, data.id));
+    }, []
+  )
   
   return (
     <div className={theme}>
@@ -53,9 +81,12 @@ const PoolItem = ({data}) => {
     <div className="card-body">
         <h5 className="card-title">{data.status}</h5>
         <p className="card-text">{data.created.slice(0, -4).replace('T', ' ')}</p>
-        <button className={btnTheme} disabled={data.status === 'ARCHIVED'} onClick={onClick}>
-          {data.status === 'OPEN' ? 'Close pool' : 'Open pool'}
-        </button>
+        <div className="btn-group" role="group">
+          <button className={btnTheme} disabled={data.status === 'ARCHIVED'} onClick={onClick}>
+            {data.status === 'OPEN' ? 'Close pool' : 'Open pool'}
+          </button>
+          {imagesAvailable !== 0 ? <button className='card text-dark bg-warning mb-3' onClick={downloadImages}>{imagesAvailable + ' images available'}</button> : <p></p>}
+        </div>
     </div>
     </div>
   )

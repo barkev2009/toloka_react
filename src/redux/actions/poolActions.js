@@ -1,19 +1,7 @@
 import axios from "axios";
-import { CHANGE_SANDBOX, CLOSE_POOL, GET_POOLS, HIDE_SPINNER, OPEN_POOL, REFRESH_POOLS, RESET_ERROR, SET_ERROR, SET_YATOKEN, SHOW_SPINNER } from "./types";
+import { CLOSE_POOL, GET_POOLS, OPEN_POOL, REFRESH_POOLS, SET_ACTIVE_POOL } from "../types";
+import { hideSpinner, resetError, setError, showSpinner } from "./appActions";
 
-export function setYaToken (token) {
-    localStorage.setItem('yaToken', token);
-    return {
-        type: SET_YATOKEN,
-        payload: token
-    }
-};
-
-export function changeSandbox() {
-    return {
-        type: CHANGE_SANDBOX
-    }
-}
 
 export function getPools(token, sandbox) {
     return async dispatch => {
@@ -57,18 +45,6 @@ export function refreshPools(token, sandbox) {
     }
 }
 
-export function showSpinner() {
-    return {
-        type: SHOW_SPINNER
-    }
-}
-
-export function hideSpinner() {
-    return {
-        type: HIDE_SPINNER
-    }
-}
-
 export function openClosePool(token, sandbox, poolId, action) {
     return async dispatch => {
         axios({
@@ -95,15 +71,9 @@ export function openClosePool(token, sandbox, poolId, action) {
     }
 }
 
-export function setError(errorMessage) {
+export function setActivePool(pool_id) {
     return {
-        type: SET_ERROR,
-        payload: errorMessage
-    }
-}
-
-export function resetError(errorMessage) {
-    return {
-        type: RESET_ERROR
+        type: SET_ACTIVE_POOL,
+        payload: pool_id
     }
 }

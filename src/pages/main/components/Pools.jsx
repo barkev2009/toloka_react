@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import PoolItem from './PoolItem'
-import { getPools } from '../../../redux/actions'
+import { getPools } from '../../../redux/actions/poolActions'
 import { useDispatch, useSelector } from 'react-redux'
 import SpinnerButton from './SpinnerButton'
+import { resetError } from '../../../redux/actions/appActions'
+import { useNavigate } from 'react-router-dom'
 
 const Pools = () => {
 
@@ -12,14 +14,24 @@ const Pools = () => {
     const sandbox = useSelector(state => state.sandbox.sandboxOn)
     const latestError = JSON.stringify(useSelector(state => state.app.latestError))
 
-    const onClick = () => {
+    const navigate = useNavigate();
+  
+    const navToImages = useCallback(
+      () => navigate('/images', {replace: true}, [navigate])
+    )
+
+    const handleGetPools = () => {
         dispatch(getPools(token, sandbox));
+        dispatch(resetError());
     };
     
   return (
     <div className="container-fluid">
-        <SpinnerButton onClick={onClick}/>
-        {latestError !== 'null' ? <p>{latestError}</p> : <p></p>}
+        <SpinnerButton onClick={handleGetPools}/>
+        <button type='button' className='btn btn-info ml-1' onClick={navToImages}>
+          Go to images
+        </button>
+        {latestError !== 'null' ? <div className='alert alert-danger' role='alert'>{latestError}</div> : <div></div>}
         {pools.items && pools.items.length !== 0 ? 
         pools.items.map(item => <PoolItem data={item} key={item.id}/>) :
             pools.code === 'ACCESS_DENIED' ? 

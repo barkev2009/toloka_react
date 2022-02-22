@@ -1,5 +1,5 @@
 import {connect} from 'react-redux';
-import { setYaToken } from '../../../redux/actions';
+import { setYaToken } from '../../../redux/actions/yatokenActions';
 
 const TokenForm = ({yaToken, setYaToken}) => {
 

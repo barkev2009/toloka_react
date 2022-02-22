@@ -1,6 +1,6 @@
-import { GET_POOLS, REFRESH_POOLS } from "./types";
+import { GET_POOLS, REFRESH_POOLS, SET_ACTIVE_POOL } from "../types";
 
-const initialState = {pools: []};
+const initialState = {pools: [], activePool: ''};
 
 export const poolReducer = (state=initialState, action) => {
     switch (action.type) {
@@ -8,6 +8,8 @@ export const poolReducer = (state=initialState, action) => {
             return {...state, pools: action.payload}
         case REFRESH_POOLS:
             return {...state, pools: action.payload}
+        case SET_ACTIVE_POOL:
+            return {...state, activePool: action.payload}
         default:
             return state
     }

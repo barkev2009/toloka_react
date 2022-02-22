@@ -4,6 +4,7 @@ import SandboxSwitch from './SandboxSwitch'
 import TokenForm from './TokenForm'
 
 const MainPage = () => {
+
   return (
     <div className="container pt-3">
       <SandboxSwitch />
