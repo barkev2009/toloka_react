@@ -17,7 +17,7 @@ const Pools = () => {
     const navigate = useNavigate();
   
     const navToImages = useCallback(
-      () => navigate('/images', {replace: true}, [navigate])
+      () => navigate('/images', {replace: true}, [navigate]), []
     )
 
     const handleGetPools = () => {
@@ -32,11 +32,9 @@ const Pools = () => {
           Go to images
         </button>
         {latestError !== 'null' ? <div className='alert alert-danger' role='alert'>{latestError}</div> : <div></div>}
-        {pools.items && pools.items.length !== 0 ? 
+        {pools.items && pools.items.length !== 0 && latestError === 'null' ? 
         pools.items.map(item => <PoolItem data={item} key={item.id}/>) :
-            pools.code === 'ACCESS_DENIED' ? 
-            <div className="alert alert-danger" role="alert">Access by this token is denied!</div> :
-            <div className="alert alert-primary" role="alert">No pools to display yet</div>}       
+        <div className="alert alert-primary" role="alert">No pools to display yet</div>}       
     </div>
   )
 }

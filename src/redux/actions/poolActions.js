@@ -14,12 +14,19 @@ export function getPools(token, sandbox) {
                 sandbox
             }
             }).then(response => {
-            dispatch({
-                    type: GET_POOLS,
-                    payload: {
-                        items: response.data.items.filter(item => item.status !== 'ARCHIVED')
-                    }
-                });
+                if ('code' in response.data ) {
+                    dispatch(setError(response.data))
+                } else if ('items' in response.data) {
+                    dispatch(resetError())
+                    dispatch({
+                        type: GET_POOLS,
+                        payload: {
+                            items: response.data.items.filter(item => item.status !== 'ARCHIVED')
+                        }
+                    });
+                } else {
+                    dispatch(setError(response.data))
+                }
             dispatch(hideSpinner());
             });     
     }
