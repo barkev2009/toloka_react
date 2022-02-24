@@ -3,6 +3,7 @@
 # python
 .idea
 src/api/__pycache__
+public/images
 
 # dependencies
 /node_modules
