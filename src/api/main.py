@@ -85,8 +85,13 @@ def download_image(
             'Authorization': f'OAuth {token}',
         }
     )
-    if file_name in os.listdir('../../public/images/'):
+
+    folder_name = '../../public/images'
+
+    if 'images' not in os.listdir('../../public'):
+        os.mkdir(folder_name)
+    if file_name in os.listdir(folder_name):
         print(f'File {file_name} is already in folder')
     else:
-        with open(f'../../public/images/{file_name}', 'wb') as file:
+        with open(f'{folder_name}/{file_name}', 'wb') as file:
             file.write(response.content)
