@@ -3,7 +3,7 @@ import { connect, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ImageForm from './ImageForm';
 import '../styles/Images.css';
-import { checkImageSize, checkNamePattern, checkWhiteArea, removeDuplicates } from '../../../redux/actions/imageActions';
+import { changeAllImages, checkImageSize, checkNamePattern, checkWhiteArea, removeDuplicates } from '../../../redux/actions/imageActions';
 import { useDispatch } from 'react-redux';
 import CheckButton from './CheckButton';
 
@@ -29,12 +29,24 @@ const ImagesPage = ({activePoolID, removeDuplicates}) => {
     const checkWhiteAreas = () => {
         dispatch(checkWhiteArea(images))
     }
+    const acceptAll = () => {
+        dispatch(changeAllImages(activePoolID, 'accept'))
+    }
+    const rejectAll = () => {
+        dispatch(changeAllImages(activePoolID, 'reject'))
+    }
 
 
     return (
         <div className="container-fluid">
             <button type='button' className='btn btn-info' onClick={returnHome}>
                 Return home
+            </button>
+            <button type='button' className='btn btn-success' onClick={acceptAll}>
+                Accept all
+            </button>
+            <button type='button' className='btn btn-danger' onClick={rejectAll}>
+                Reject all
             </button>
             <CheckButton onClick={removeDuplicatesFromPool} value={'Reject duplicate names'}/>
             <CheckButton onClick={checkNamePatterns} value={'Check for name pattern'}/>

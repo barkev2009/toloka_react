@@ -113,7 +113,9 @@ def download_image(
 async def check_name_pattern(request: Request):
     body = await request.json()
     for item in body:
-        item['decision'] = fname_check(item['name'])
+        check_result = fname_check(item['name'])
+        if check_result == 'reject':
+            item['decision'] = check_result
     return body
 
 
@@ -121,7 +123,9 @@ async def check_name_pattern(request: Request):
 async def check_images_size(request: Request):
     body = await request.json()
     for item in body:
-        item['decision'] = lowest_pix_size(f'{FOLDER_NAME}/{item["fake_name"]}')
+        check_result = lowest_pix_size(f'{FOLDER_NAME}/{item["fake_name"]}')
+        if check_result == 'reject':
+            item['decision'] = check_result
     return body
 
 
@@ -129,5 +133,7 @@ async def check_images_size(request: Request):
 async def check_white_area(request: Request):
     body = await request.json()
     for item in body:
-        item['decision'] = white_pixels_area(f'{FOLDER_NAME}/{item["fake_name"]}')
+        check_result = white_pixels_area(f'{FOLDER_NAME}/{item["fake_name"]}')
+        if check_result == 'reject':
+            item['decision'] = check_result
     return body

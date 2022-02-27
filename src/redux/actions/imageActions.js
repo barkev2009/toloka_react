@@ -1,5 +1,5 @@
 import axios from "axios"
-import { CHECK_IMAGES_SIZE, CHECK_NAME_PATTERN, CHECK_WHITE_AREA, READ_IMAGES_FROM_POOL, REMOVE_DUPLICATE_NAMES, SET_DECISION } from "../types"
+import { CHANGE_ALL, CHECK_IMAGES_SIZE, CHECK_NAME_PATTERN, CHECK_WHITE_AREA, READ_IMAGES_FROM_POOL, REMOVE_DUPLICATE_NAMES, SET_DECISION } from "../types"
 
 export function readImagesFromPool (token, sandbox, pool_id) {
     return async dispatch => {
@@ -91,6 +91,16 @@ export function setDecision(imgId, decisionString) {
         type: SET_DECISION,
         payload: {
             imgId,
+            decisionString
+        }
+    }
+}
+
+export function changeAllImages(poolId, decisionString) {
+    return {
+        type: CHANGE_ALL,
+        payload: {
+            poolId, 
             decisionString
         }
     }
