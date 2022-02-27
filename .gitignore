@@ -12,6 +12,7 @@ public/images
 
 # testing
 /coverage
+/test_files
 
 # production
 /build

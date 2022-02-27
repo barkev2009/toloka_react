@@ -1,5 +1,5 @@
 import axios from "axios"
-import { READ_IMAGES_FROM_POOL } from "../types"
+import { CHECK_IMAGES_SIZE, CHECK_NAME_PATTERN, CHECK_WHITE_AREA, READ_IMAGES_FROM_POOL, REMOVE_DUPLICATE_NAMES, SET_DECISION } from "../types"
 
 export function readImagesFromPool (token, sandbox, pool_id) {
     return async dispatch => {
@@ -12,15 +12,86 @@ export function readImagesFromPool (token, sandbox, pool_id) {
                 pool_id
             }
         }).then(response => {
+            const imageData = response.data.items.map(item => ({...item, fake_name: item.id + '.' + item.name.split('.').reverse()[0]}))
             dispatch(
                 {
                     type: READ_IMAGES_FROM_POOL,
-                    payload: {
-                        pool_id,
-                        images: response.data.items
-                    }
+                    payload: [
+                        ...imageData
+                    ]
                 }
             )
         })
+    }
+}
+
+export function removeDuplicates(poolID) {
+    return {
+        type: REMOVE_DUPLICATE_NAMES,
+        payload: poolID
+    }
+}
+
+export function checkNamePattern(imageData) {
+    return async dispatch => {
+        axios({
+            method: 'POST',
+            url: 'http://127.0.0.1:8000/check_name_pattern',
+            data: [
+                ...imageData
+            ]
+        }).then(response => {
+            dispatch({
+                type: CHECK_NAME_PATTERN,
+                payload: response.data
+            }) 
+        }
+        )
+    }
+}
+
+export function checkImageSize(imageData) {
+    return async dispatch => {
+        axios({
+            method: 'POST',
+            url: 'http://127.0.0.1:8000/check_images_size',
+            data: [
+                ...imageData
+            ]
+        }).then(response => {
+            dispatch({
+                type: CHECK_IMAGES_SIZE,
+                payload: response.data
+            }) 
+        }
+        )
+    }
+}
+
+export function checkWhiteArea(imageData) {
+    return async dispatch => {
+        axios({
+            method: 'POST',
+            url: 'http://127.0.0.1:8000/check_white_area',
+            data: [
+                ...imageData
+            ]
+        }).then(response => {
+            dispatch({
+                type: CHECK_WHITE_AREA,
+                payload: response.data
+            }) 
+        }
+        )
+    }
+}
+
+export function setDecision(imgId, decisionString) {
+    return {
+        type: SET_DECISION,
+        payload: {
+            imgId,
+            decisionString
+        }
     }
 }

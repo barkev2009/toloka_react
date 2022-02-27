@@ -10,15 +10,17 @@ def fname_check(x):
     year_pref = "2022"
     pref_format = x.split('.')[0].lower()
     if len(re.findall(allowed_prefs, pref_format)) == 1 and len(re.findall(year_pref, pref_format)) == 1:
-        status = "pass"
+        status = "accept"
     else:
         status = "reject"
     return status
 
 
 def lowest_pix_size(img_path):
-    lowest_pix_size = sorted(list(Image.open(img_path).size))[0]
-    return lowest_pix_size < 3000
+    image_size = list(Image.open(img_path).size)
+    lowest_pix_size = sorted(image_size)[0]
+    print(lowest_pix_size)
+    return 'accept' if lowest_pix_size < 3000 else 'reject'
 
 
 def white_pixels_area(img_path):
@@ -28,4 +30,5 @@ def white_pixels_area(img_path):
     maxval = 255
     im_bin = (im_gray > int(th)) * maxval
     white_pixels_area = len(im_bin[im_bin == 255]) / (im_bin.shape[0] * im_bin.shape[1])
-    return white_pixels_area < 0.91
+    print(white_pixels_area)
+    return 'accept' if white_pixels_area < 0.91 else 'reject'

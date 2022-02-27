@@ -1,8 +1,11 @@
 from typing import Optional
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 import os
+from redis import Redis
+import json
+from checks import fname_check, lowest_pix_size, white_pixels_area
 
 app = FastAPI()
 origins = [
@@ -17,6 +20,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+FOLDER_NAME = '../../public/images'
 
 
 @app.get("/pools/")
@@ -60,14 +65,21 @@ def read_image_names():
 def read_images_from_pool(token: Optional[str] = None, sandbox: Optional[str] = True, pool_id: Optional[str] = None):
     url = f'https://toloka.yandex.com/api/v1/attachments?pool_id={pool_id}' if sandbox == 'false' else \
         f'https://sandbox.toloka.yandex.com/api/v1/attachments?pool_id={pool_id}'
-    response = requests.get(
-        url,
-        headers={
-            'Authorization': f'OAuth {token}',
-        }
-    )
-    # print(response.json())
-    return response.json()
+    r = Redis()
+
+    if r.exists(pool_id) == 1:
+        print(json.loads(r.get(pool_id)))
+        return json.loads(r.get(pool_id))
+    else:
+        response = requests.get(
+            url,
+            headers={
+                'Authorization': f'OAuth {token}',
+            }
+        )
+
+        r.setex(pool_id, 3600, json.dumps(response.json()))
+        return response.json()
 
 
 @app.get('/download_image/')
@@ -86,12 +98,36 @@ def download_image(
         }
     )
 
-    folder_name = '../../public/images'
+    file_name = f'{file_id}.{file_name.split(".")[-1]}'
 
     if 'images' not in os.listdir('../../public'):
-        os.mkdir(folder_name)
-    if file_name in os.listdir(folder_name):
+        os.mkdir(FOLDER_NAME)
+    if file_name in os.listdir(FOLDER_NAME):
         print(f'File {file_name} is already in folder')
     else:
-        with open(f'{folder_name}/{file_name}', 'wb') as file:
+        with open(f'{FOLDER_NAME}/{file_name}', 'wb') as file:
             file.write(response.content)
+
+
+@app.post('/check_name_pattern/')
+async def check_name_pattern(request: Request):
+    body = await request.json()
+    for item in body:
+        item['decision'] = fname_check(item['name'])
+    return body
+
+
+@app.post('/check_images_size/')
+async def check_images_size(request: Request):
+    body = await request.json()
+    for item in body:
+        item['decision'] = lowest_pix_size(f'{FOLDER_NAME}/{item["fake_name"]}')
+    return body
+
+
+@app.post('/check_white_area/')
+async def check_white_area(request: Request):
+    body = await request.json()
+    for item in body:
+        item['decision'] = white_pixels_area(f'{FOLDER_NAME}/{item["fake_name"]}')
+    return body

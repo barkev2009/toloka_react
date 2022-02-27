@@ -13,8 +13,8 @@ const PoolItem = ({data}) => {
   const dispatch = useDispatch();
   const token = useSelector(state => state.token.yaToken)
   const sandbox = useSelector(state => state.sandbox.sandboxOn)
-  const poolImages = useSelector(state => state.images.images.filter(item => item.pool_id === data.id)[0])
-  const imagesAvailable = poolImages !== undefined ? poolImages.images.length : 0
+  const poolImages = useSelector(state => state.images.images.filter(item => item.details.pool_id === data.id))
+  const imagesAvailable = poolImages !== undefined ? poolImages.length : 0
 
   const onClick = () => {
     dispatch(openClosePool(
@@ -38,7 +38,7 @@ const PoolItem = ({data}) => {
   }
 
   const downloadImages = () => {
-    poolImages.images.forEach(img => {
+    poolImages.forEach(img => {
       downloadImage(sandbox, token, img.id, img.name);
     });
     dispatch(setActivePool(data.id))
