@@ -8,7 +8,7 @@ const TokenForm = ({yaToken, setYaToken}) => {
     setYaToken(e.target.value);
   }
 
-  return <div>
+  return <div className='container'>
     <h4>Toloka Token</h4>
     <input onChange={onChange} className="form-control" placeholder='Your token here' value={yaToken.yaToken}> 
       

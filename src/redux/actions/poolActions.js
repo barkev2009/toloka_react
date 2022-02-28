@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CLOSE_POOL, GET_POOLS, OPEN_POOL, REFRESH_POOLS, SET_ACTIVE_POOL } from "../types";
+import { CLOSE_POOL, GET_POOLS, OPEN_POOL, REFRESH_POOLS, SEND_CHECKED_TASKS, SET_ACTIVE_POOL } from "../types";
 import { hideSpinner, resetError, setError, showSpinner } from "./appActions";
 
 
@@ -21,7 +21,7 @@ export function getPools(token, sandbox) {
                     dispatch({
                         type: GET_POOLS,
                         payload: {
-                            items: response.data.items.filter(item => item.status !== 'ARCHIVED')
+                            items: response.data.items
                         }
                     });
                 } else {
@@ -83,4 +83,24 @@ export function setActivePool(pool_id) {
         type: SET_ACTIVE_POOL,
         payload: pool_id
     }
+}
+
+export function sendCheckedTasks(sandbox, token, items) {
+    return async dispatch => {
+        axios({
+            method: 'POST',
+            url: 'http://127.0.0.1:8000/send_checked_tasks/',
+            data: {
+                sandbox,
+                token,
+                items
+            }
+        }).then(
+            response => {
+                dispatch({
+                    type: SEND_CHECKED_TASKS
+                })
+            }
+        )
+    } 
 }

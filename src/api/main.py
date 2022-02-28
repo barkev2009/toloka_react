@@ -25,16 +25,44 @@ FOLDER_NAME = '../../public/images'
 
 
 @app.get("/pools/")
-def read_item(token: Optional[str] = None, sandbox: Optional[str] = True):
-    url = 'https://toloka.yandex.com/api/v1/pools?limit=300&sort=-created' if sandbox == 'false' else \
-        'https://sandbox.toloka.yandex.com/api/v1/pools?limit=300&sort=-created'
-    response = requests.get(
-        url,
-        headers={
-            'Authorization': f'OAuth {token}',
-        }
-    )
-    return response.json()
+def get_pools(token: Optional[str] = None, sandbox: Optional[str] = True):
+    r = Redis()
+    # if r.exists('pools') == 1:
+    #     print('Key "pools" exists in Redis')
+    #     return {'items': json.loads(r.get('pools'))}
+
+    pool_data = []
+    for status in ['OPEN', 'CLOSED']:
+        url = f'https://toloka.yandex.com/api/v1/pools?limit=300&sort=-created&status={status}' if sandbox == 'false' else \
+            f'https://sandbox.toloka.yandex.com/api/v1/pools?limit=300&sort=-created&status={status}'
+        response = requests.get(
+            url,
+            headers={
+                'Authorization': f'OAuth {token}',
+            }
+        )
+        pool_data += response.json()['items']
+
+    project_ids = [item['project_id'] for item in pool_data]
+    project_names = {}
+
+    for project_id in project_ids:
+        url = f'https://toloka.yandex.com/api/v1/projects/{project_id}' if sandbox == 'false' else \
+            f'https://sandbox.toloka.yandex.com/api/v1/projects/{project_id}'
+
+        project_response = requests.get(
+            url,
+            headers={
+                'Authorization': f'OAuth {token}',
+            }
+        )
+        project_names[project_id] = project_response.json()['public_name']
+    for pool in pool_data:
+        pool['project_name'] = project_names[pool['project_id']]
+
+    r.setex('pools', 3600, json.dumps(pool_data))
+
+    return {'items': pool_data}
 
 
 @app.post('/pools/{action}/')
@@ -65,21 +93,41 @@ def read_image_names():
 def read_images_from_pool(token: Optional[str] = None, sandbox: Optional[str] = True, pool_id: Optional[str] = None):
     url = f'https://toloka.yandex.com/api/v1/attachments?pool_id={pool_id}' if sandbox == 'false' else \
         f'https://sandbox.toloka.yandex.com/api/v1/attachments?pool_id={pool_id}'
-    r = Redis()
+    # r = Redis()
 
-    if r.exists(pool_id) == 1:
-        print(json.loads(r.get(pool_id)))
-        return json.loads(r.get(pool_id))
-    else:
-        response = requests.get(
-            url,
-            headers={
-                'Authorization': f'OAuth {token}',
-            }
-        )
+    # if r.exists(pool_id) == 1:
+    #     return json.loads(r.get(pool_id))
+    # else:
+    response = requests.get(
+        url,
+        headers={
+            'Authorization': f'OAuth {token}',
+        }
+    ).json()
 
-        r.setex(pool_id, 3600, json.dumps(response.json()))
-        return response.json()
+    # Getting assignment statuses
+    url = f'https://toloka.yandex.com/api/v1/assignments?pool_id={pool_id}' if sandbox == 'false' else \
+        f'https://sandbox.toloka.yandex.com/api/v1/assignments?pool_id={pool_id}'
+    assignment_response = requests.get(
+        url,
+        headers={
+            'Authorization': f'OAuth {token}',
+        }
+    ).json()['items']
+
+    if 'items' in response.keys():
+        for item in response['items']:
+            # item['status'] = list(filter(lambda x: x['id'] == item['details']['assignment_id'], assignment_response))[0]['status']
+            item.update(
+                {
+                    'status': list(filter(lambda x: x['id'] == item['details']['assignment_id'], assignment_response))[0]['status']
+                }
+            )
+
+        print(json.dumps(response['items'], indent=4))
+
+    # r.setex(pool_id, 3600, json.dumps(response.json()))
+    return response
 
 
 @app.get('/download_image/')
@@ -137,3 +185,24 @@ async def check_white_area(request: Request):
         if check_result == 'reject':
             item['decision'] = check_result
     return body
+
+
+@app.post('/send_checked_tasks/')
+async def send_checked_tasks(request: Request):
+    body = await request.json()
+    for item in body['items']:
+        url = f'https://toloka.yandex.com/api/v1/assignments/{item["details"]["assignment_id"]}' if body['sandbox'] == 'false' else \
+            f'https://sandbox.toloka.yandex.com/api/v1/assignments/{item["details"]["assignment_id"]}'
+        response = requests.patch(
+            url,
+            json={
+                'status': (item['decision'] + 'ed').upper(),
+                'public_comment': 'comment'
+            },
+            headers={
+                'Authorization': f'OAuth {body["token"]}',
+                'Content-Type': 'application/JSON'
+            }
+        )
+        print(response.json())
+

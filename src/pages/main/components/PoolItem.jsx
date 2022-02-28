@@ -14,7 +14,8 @@ const PoolItem = ({data}) => {
   const token = useSelector(state => state.token.yaToken)
   const sandbox = useSelector(state => state.sandbox.sandboxOn)
   const poolImages = useSelector(state => state.images.images.filter(item => item.details.pool_id === data.id))
-  const imagesAvailable = poolImages !== undefined ? poolImages.length : 0
+  const imagesAvailable = poolImages !== undefined ? poolImages.filter(item => item.status === 'SUBMITTED').length : 0
+  const cardHeader = `Project Name: ${data.project_name} || Pool Name: ${data.private_name}`
 
   const onClick = () => {
     dispatch(openClosePool(
@@ -76,11 +77,12 @@ const PoolItem = ({data}) => {
   return (
     <div className={theme}>
     <div className="card-header">
-        {data.private_name}
+        {data.status}
     </div>
     <div className="card-body">
-        <h5 className="card-title">{data.status}</h5>
-        <p className="card-text">{data.created.slice(0, -4).replace('T', ' ')}</p>
+        <h5 className="card-title">{data.private_name}</h5>
+        <p className="card-text">{`Project Name: ${data.project_name}`}</p>
+        <p className="card-text">{`Created on: ${data.created.slice(0, -4).replace('T', ' ')}`}</p>
         <div className="btn-group" role="group">
           <button className={btnTheme} disabled={data.status === 'ARCHIVED'} onClick={onClick}>
             {data.status === 'OPEN' ? 'Close pool' : 'Open pool'}

@@ -27,12 +27,14 @@ const Pools = () => {
     
   return (
     <div className="container-fluid">
-        <SpinnerButton onClick={handleGetPools}/>
-        <button type='button' className='btn btn-info ml-1' onClick={navToImages}>
-          Go to images
-        </button>
+        <div className="container">
+          <SpinnerButton onClick={handleGetPools}/>
+          <button type='button' className='btn btn-info ml-1' onClick={navToImages}>
+            Go to images
+          </button>
+        </div>
         {latestError !== 'null' ? <div className='alert alert-danger' role='alert'>{latestError}</div> : <div></div>}
-        {pools.items && pools.items.length !== 0 && latestError === 'null' ? 
+        {pools.items && pools.items.length !== 0 ? 
         pools.items.map(item => <PoolItem data={item} key={item.id}/>) :
         <div className="alert alert-primary" role="alert">No pools to display yet</div>}       
     </div>

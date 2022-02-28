@@ -6,12 +6,15 @@ import '../styles/Images.css';
 import { changeAllImages, checkImageSize, checkNamePattern, checkWhiteArea, removeDuplicates } from '../../../redux/actions/imageActions';
 import { useDispatch } from 'react-redux';
 import CheckButton from './CheckButton';
+import { sendCheckedTasks } from '../../../redux/actions/poolActions';
 
 const ImagesPage = ({activePoolID, removeDuplicates}) => {
 
     const folder = '/images/';
     const images = useSelector(state => state.images.images.filter(img => img.details.pool_id === activePoolID));
     const dispatch = useDispatch();
+    const token = useSelector(state => state.token.yaToken)
+    const sandbox = useSelector(state => state.sandbox.sandboxOn)
 
     const navigate = useNavigate(); 
     const returnHome = useCallback(
@@ -35,23 +38,38 @@ const ImagesPage = ({activePoolID, removeDuplicates}) => {
     const rejectAll = () => {
         dispatch(changeAllImages(activePoolID, 'reject'))
     }
+    const sendTasks = () => {
+        // console.log(sandbox, token)
+        dispatch(sendCheckedTasks(sandbox, token, images))
+    }
 
 
     return (
         <div className="container-fluid">
-            <button type='button' className='btn btn-info' onClick={returnHome}>
-                Return home
-            </button>
-            <button type='button' className='btn btn-success' onClick={acceptAll}>
-                Accept all
-            </button>
-            <button type='button' className='btn btn-danger' onClick={rejectAll}>
-                Reject all
-            </button>
-            <CheckButton onClick={removeDuplicatesFromPool} value={'Reject duplicate names'}/>
-            <CheckButton onClick={checkNamePatterns} value={'Check for name pattern'}/>
-            <CheckButton onClick={checkSizes} value={'Check image sizes'}/>
-            <CheckButton onClick={checkWhiteAreas} value={'Check white areas'}/>
+            <div className="container">
+                <button type='button' className='btn btn-info' onClick={returnHome}>
+                    Return home
+                </button>
+                <button type='button' className='btn btn-primary btn-lg' onClick={sendTasks} disabled={images.length === 0}>
+                    Send response to tasks
+                </button>
+            </div>
+            <div className="container change-buttons">
+                <div className='changeAll-buttons'>
+                    <button type='button' className='btn btn-success' onClick={acceptAll} disabled={images.length === 0}>
+                        Accept all
+                    </button>
+                    <button type='button' className='btn btn-danger' onClick={rejectAll} disabled={images.length === 0}>
+                        Reject all
+                    </button>
+                </div>
+                <div className='check-buttons'>
+                    <CheckButton onClick={removeDuplicatesFromPool} value={'Reject duplicate names'} disabled={images.length === 0}/>
+                    <CheckButton onClick={checkNamePatterns} value={'Check for name pattern'} disabled={images.length === 0}/>
+                    <CheckButton onClick={checkSizes} value={'Check image sizes'} disabled={images.length === 0}/>
+                    <CheckButton onClick={checkWhiteAreas} value={'Check white areas'} disabled={images.length === 0}/>
+                </div>
+            </div>
             <div className="container pt-3" style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-end'}}>
                 { images.length !== 0 && activePoolID !== '' ? images.map( item =>
                     <ImageForm imageData={item} rootFolder={folder} key={item.id}/>

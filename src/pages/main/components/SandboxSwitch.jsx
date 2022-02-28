@@ -10,8 +10,8 @@ const SandboxSwitch = ({changeSandbox, sandbox}) => {
 
   return (
     <div className="form-check form-switch">
-    <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked={sandbox.sandboxOn} onChange={onClick}/>
-    <label className="form-check-label" htmlFor="flexSwitchCheckChecked">{sandbox.label}</label>
+      <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked={sandbox.sandboxOn} onChange={onClick}/>
+      <label className="form-check-label" htmlFor="flexSwitchCheckChecked">{sandbox.label}</label>
     </div>
   )
 }
