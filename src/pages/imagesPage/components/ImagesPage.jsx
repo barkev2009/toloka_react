@@ -71,7 +71,7 @@ const ImagesPage = ({activePoolID, removeDuplicates}) => {
                 </div>
             </div>
             <div className="container pt-3" style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-end'}}>
-                { images.length !== 0 && activePoolID !== '' ? images.map( item =>
+                 { images.length !== 0 && activePoolID !== '' ? images.map( item =>
                     <ImageForm imageData={item} rootFolder={folder} key={item.id}/>
                 ) :
                 <div className="alert alert-danger" style={{width: '100%'}}>No images to show yet</div>}

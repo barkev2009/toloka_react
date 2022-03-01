@@ -1,3 +1,4 @@
+import { ACCEPT_COMMENT, REJECT_COMMENT } from "../../constants";
 import { CHANGE_ALL, CHECK_IMAGES_SIZE, CHECK_NAME_PATTERN, CHECK_WHITE_AREA, READ_IMAGES_FROM_POOL, REMOVE_DUPLICATE_NAMES, SEND_CHECKED_TASKS, SET_COMMENT, SET_DECISION } from "../types";
 
 const initialState = {images: []};
@@ -10,7 +11,8 @@ export const imagesReducer = (state=initialState, action) => {
                 item => {
                     if (!state.images.map(img => img.id).includes(item.id)) {  // if the image is new 
                         item.decision = 'accept';
-                        newImages.push(item)
+                        item.comment = ACCEPT_COMMENT;
+                        newImages.push(item);
                     }
                 }
             )
@@ -27,6 +29,7 @@ export const imagesReducer = (state=initialState, action) => {
                         newData.push(item)
                     } else {
                         item.decision = 'reject';
+                        item.comment = REJECT_COMMENT;
                         newData.push(item);
                     }
                 }
@@ -49,7 +52,8 @@ export const imagesReducer = (state=initialState, action) => {
         case CHANGE_ALL: // expecting action.payload as {poolId, decisionString}
             const imagesChange = state.images.filter(item => item.details.pool_id === action.payload.poolId);
             const otherImagesChange = state.images.filter(item => item.details.pool_id !== action.payload.poolId);
-            return {...state, images: [...otherImagesChange, ...imagesChange.map(item => ({...item, decision: action.payload.decisionString}))]}
+            const commentForAll = action.payload.decisionString === 'accept' ? ACCEPT_COMMENT : REJECT_COMMENT;
+            return {...state, images: [...otherImagesChange, ...imagesChange.map(item => ({...item, decision: action.payload.decisionString, comment: commentForAll}))]}
         default:
             return state
     }

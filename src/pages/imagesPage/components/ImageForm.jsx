@@ -1,5 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
+import { ACCEPT_COMMENT, REJECT_COMMENT } from '../../../constants'
 import { setComment, setDecision } from '../../../redux/actions/imageActions'
 import '../styles/Images.css'
 
@@ -10,10 +11,12 @@ const ImageForm = ({rootFolder, imageData}) => {
   const dispatch = useDispatch()
 
   const setAcceptDecision = (decisionString) => {
-    dispatch(setDecision(imageData.id, 'accept'))
+    dispatch(setDecision(imageData.id, 'accept'));
+    setCommentOnImage(ACCEPT_COMMENT);
   }
   const setRejectDecision = (decisionString) => {
-    dispatch(setDecision(imageData.id, 'reject'))
+    dispatch(setDecision(imageData.id, 'reject'));
+    setCommentOnImage(REJECT_COMMENT);
   }
   const setCommentOnImage = (commentString) => {
     dispatch(setComment(imageData.id, commentString))
@@ -33,10 +36,6 @@ const ImageForm = ({rootFolder, imageData}) => {
           </div>
         <div className='row'>
           <figcaption className="figure-caption text-center img-caption">{imageData.name}</figcaption>
-          {/* <div className='btn-group btn-group-sm' role='group'>
-              <button className='btn btn-outline-success' type='button' autocomplete='off'>Accept</button>
-              <button className='btn btn-outline-danger' type='button'>Reject</button>
-          </div> */}
         </div>
         <div className='row'>
           <div className='btn-group btn-group-sm' role='group'>

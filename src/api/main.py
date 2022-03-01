@@ -3,10 +3,12 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 import os
-from shutil import rmtree
+from shutil import rmtree, copyfile
 from redis import Redis
 import json
 from checks import fname_check, lowest_pix_size, white_pixels_area
+from tkinter import Tk
+from tkinter import filedialog
 
 app = FastAPI()
 origins = [
@@ -22,7 +24,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-FOLDER_NAME = '../../public/images'
+IMAGES_FOLDER = '../../public/images'
+PUBLIC_FOLDER = '../../public'
+ACCEPTED_FOLDER = '../../public/accepted'
+ACCEPT_COMMENT = 'Спасибо за участие!'
+REJECT_COMMENT = 'К сожалению, фото не соответствует требованиям заказчика'
 
 
 @app.get("/pools/")
@@ -147,12 +153,12 @@ def download_image(
 
     file_name = f'{file_id}.{file_name.split(".")[-1]}'
 
-    if 'images' not in os.listdir('../../public'):
-        os.mkdir(FOLDER_NAME)
-    if file_name in os.listdir(FOLDER_NAME):
+    if 'images' not in os.listdir(PUBLIC_FOLDER):
+        os.mkdir(IMAGES_FOLDER)
+    if file_name in os.listdir(IMAGES_FOLDER):
         print(f'File {file_name} is already in folder')
     else:
-        with open(f'{FOLDER_NAME}/{file_name}', 'wb') as file:
+        with open(os.path.join(IMAGES_FOLDER, file_name), 'wb') as file:
             file.write(response.content)
 
 
@@ -163,6 +169,7 @@ async def check_name_pattern(request: Request):
         check_result = fname_check(item['name'])
         if check_result == 'reject':
             item['decision'] = check_result
+            item['comment'] = REJECT_COMMENT
     return body
 
 
@@ -170,9 +177,10 @@ async def check_name_pattern(request: Request):
 async def check_images_size(request: Request):
     body = await request.json()
     for item in body:
-        check_result = lowest_pix_size(f'{FOLDER_NAME}/{item["fake_name"]}')
+        check_result = lowest_pix_size(f'{IMAGES_FOLDER}/{item["fake_name"]}')
         if check_result == 'reject':
             item['decision'] = check_result
+            item['comment'] = REJECT_COMMENT
     return body
 
 
@@ -180,15 +188,29 @@ async def check_images_size(request: Request):
 async def check_white_area(request: Request):
     body = await request.json()
     for item in body:
-        check_result = white_pixels_area(f'{FOLDER_NAME}/{item["fake_name"]}')
+        check_result = white_pixels_area(f'{IMAGES_FOLDER}/{item["fake_name"]}')
         if check_result == 'reject':
             item['decision'] = check_result
+            item['comment'] = REJECT_COMMENT
     return body
 
 
 @app.post('/send_checked_tasks/')
 async def send_checked_tasks(request: Request):
     body = await request.json()
+
+    # root = Tk()
+    # root.withdraw()
+    #
+    # current_directory = filedialog.askdirectory(mustexist=True)
+    # file_name = "test.txt"
+    #
+    # file_path = os.path.join(current_directory, file_name)
+    # print(file_path)
+
+    if 'accepted' not in os.listdir(PUBLIC_FOLDER):
+        os.mkdir(ACCEPTED_FOLDER)
+
     for item in body['items']:
         url = f'https://toloka.yandex.com/api/v1/assignments/{item["details"]["assignment_id"]}' if body['sandbox'] == 'false' else \
             f'https://sandbox.toloka.yandex.com/api/v1/assignments/{item["details"]["assignment_id"]}'
@@ -204,6 +226,11 @@ async def send_checked_tasks(request: Request):
             }
         )
         item['status'] = (item['decision'] + 'ed').upper()
+        if item['decision'] == 'accept' and item['name'] not in os.listdir(ACCEPTED_FOLDER):
+            copyfile(
+                os.path.join(IMAGES_FOLDER, item['fake_name']),
+                os.path.join(ACCEPTED_FOLDER, item['name'])
+            )
 
-    rmtree(FOLDER_NAME)
+    rmtree(IMAGES_FOLDER)
     return body['items']
