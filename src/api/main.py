@@ -7,8 +7,7 @@ from shutil import rmtree, copyfile
 from redis import Redis
 import json
 from checks import fname_check, lowest_pix_size, white_pixels_area
-from tkinter import Tk
-from tkinter import filedialog
+
 
 app = FastAPI()
 origins = [
@@ -33,10 +32,6 @@ REJECT_COMMENT = 'К сожалению, фото не соответствуе�
 
 @app.get("/pools/")
 def get_pools(token: Optional[str] = None, sandbox: Optional[str] = True):
-    r = Redis()
-    # if r.exists('pools') == 1:
-    #     print('Key "pools" exists in Redis')
-    #     return {'items': json.loads(r.get('pools'))}
 
     pool_data = []
     for status in ['OPEN', 'CLOSED']:
@@ -49,6 +44,7 @@ def get_pools(token: Optional[str] = None, sandbox: Optional[str] = True):
             }
         )
         pool_data += response.json()['items']
+
 
     project_ids = [item['project_id'] for item in pool_data]
     project_names = {}
@@ -66,8 +62,23 @@ def get_pools(token: Optional[str] = None, sandbox: Optional[str] = True):
         project_names[project_id] = project_response.json()['public_name']
     for pool in pool_data:
         pool['project_name'] = project_names[pool['project_id']]
-
-    r.setex('pools', 3600, json.dumps(pool_data))
+        url = f'https://toloka.yandex.com/api/v1/assignments?limit=100&pool_id={pool["id"]}' if sandbox == 'false' else \
+            f'https://sandbox.toloka.yandex.com/api/v1/assignments?limit=100&pool_id={pool["id"]}'
+        assignment_response = requests.get(
+            url,
+            headers={
+                'Authorization': f'OAuth {token}',
+            }
+        ).json()['items']
+        url = f'https://toloka.yandex.com/api/v1/task-suites?limit=100&pool_id={pool["id"]}' if sandbox == 'false' else \
+            f'https://sandbox.toloka.yandex.com/api/v1/task-suites?limit=100&pool_id={pool["id"]}'
+        task_suites_response = requests.get(
+            url,
+            headers={
+                'Authorization': f'OAuth {token}',
+            }
+        ).json()['items']
+        pool['all_tasks_done'] = not (len(assignment_response) < len(task_suites_response))
 
     return {'items': pool_data}
 
@@ -93,7 +104,7 @@ def open_pool(
 
 @app.get('/read_images')
 def read_image_names():
-    return list(filter(lambda x: ('jpg' in x) or ('jpeg' in x) or ('png' in x), os.listdir('../../public/images')))
+    return list(filter(lambda x: ('jpg' in x) or ('jpeg' in x) or ('png' in x), os.listdir(IMAGES_FOLDER)))
 
 
 @app.get('/read_images_from_pool/')
@@ -198,15 +209,6 @@ async def check_white_area(request: Request):
 @app.post('/send_checked_tasks/')
 async def send_checked_tasks(request: Request):
     body = await request.json()
-
-    # root = Tk()
-    # root.withdraw()
-    #
-    # current_directory = filedialog.askdirectory(mustexist=True)
-    # file_name = "test.txt"
-    #
-    # file_path = os.path.join(current_directory, file_name)
-    # print(file_path)
 
     if 'accepted' not in os.listdir(PUBLIC_FOLDER):
         os.mkdir(ACCEPTED_FOLDER)

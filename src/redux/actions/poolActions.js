@@ -46,7 +46,7 @@ export function refreshPools(token, sandbox) {
             dispatch({
                     type: REFRESH_POOLS,
                     payload: {
-                        items: response.data.items.filter(item => item.status !== 'ARCHIVED')
+                        items: response.data.items
                     }
                 });
             });     

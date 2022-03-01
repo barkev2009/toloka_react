@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { readImagesFromPool } from '../../../redux/actions/imageActions';
 import { openClosePool, setActivePool } from '../../../redux/actions/poolActions';
 import '../styles/PoolItem.css';
@@ -11,6 +12,7 @@ const PoolItem = ({data}) => {
   const [btnTheme, setBtnTheme] = useState('');
  
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const token = useSelector(state => state.token.yaToken)
   const sandbox = useSelector(state => state.sandbox.sandboxOn)
   const poolImages = useSelector(state => state.images.images.filter(item => item.details.pool_id === data.id))
@@ -41,7 +43,11 @@ const PoolItem = ({data}) => {
     poolImages.forEach(img => {
       downloadImage(sandbox, token, img.id, img.name);
     });
-    dispatch(setActivePool(data.id))
+    dispatch(setActivePool(data.id));
+    setTimeout(
+      () => navigate('/images', {replace: true}, [navigate]), 
+      1000
+    );
   }
 
   useEffect(
@@ -83,9 +89,12 @@ const PoolItem = ({data}) => {
         <p className="card-text">{`Project Name: ${data.project_name}`}</p>
         <p className="card-text">{`Created on: ${data.created.slice(0, -4).replace('T', ' ')}`}</p>
         <div className="btn-group" role="group">
+          {
+          data.all_tasks_done ? '' : 
           <button className={btnTheme} disabled={data.status === 'ARCHIVED'} onClick={onClick}>
             {data.status === 'OPEN' ? 'Close pool' : 'Open pool'}
           </button>
+          }
           {imagesAvailable !== 0 ? <button className='card text-dark bg-warning mb-3' onClick={downloadImages}>{imagesAvailable + ' images available'}</button> : <p></p>}
         </div>
     </div>

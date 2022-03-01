@@ -4,6 +4,7 @@
 .idea
 src/api/__pycache__
 public/images
+public/accepted
 
 # dependencies
 /node_modules
