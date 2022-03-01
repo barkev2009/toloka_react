@@ -15,7 +15,6 @@ const PoolItem = ({data}) => {
   const sandbox = useSelector(state => state.sandbox.sandboxOn)
   const poolImages = useSelector(state => state.images.images.filter(item => item.details.pool_id === data.id))
   const imagesAvailable = poolImages !== undefined ? poolImages.filter(item => item.status === 'SUBMITTED').length : 0
-  const cardHeader = `Project Name: ${data.project_name} || Pool Name: ${data.private_name}`
 
   const onClick = () => {
     dispatch(openClosePool(

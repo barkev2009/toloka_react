@@ -1,14 +1,26 @@
-import { HIDE_SPINNER, RESET_ERROR, SET_ERROR, SHOW_SPINNER } from "../types"
+import { HIDE_GET_POOLS_SPINNER, HIDE_SEND_TASKS_SPINNER, RESET_ERROR, SET_ERROR, SHOW_GET_POOLS_SPINNER, SHOW_SEND_TASKS_SPINNER } from "../types"
 
-export function showSpinner() {
+export function showGetPoolsSpinner() {
     return {
-        type: SHOW_SPINNER
+        type: SHOW_GET_POOLS_SPINNER
     }
 }
 
-export function hideSpinner() {
+export function hideGetPoolsSpinner() {
     return {
-        type: HIDE_SPINNER
+        type: HIDE_GET_POOLS_SPINNER
+    }
+}
+
+export function showSendTasksSpinner() {
+    return {
+        type: SHOW_SEND_TASKS_SPINNER
+    }
+}
+
+export function hideSendTasksSpinner() {
+    return {
+        type: HIDE_SEND_TASKS_SPINNER
     }
 }
 

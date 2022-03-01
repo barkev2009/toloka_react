@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { setDecision } from '../../../redux/actions/imageActions'
+import { setComment, setDecision } from '../../../redux/actions/imageActions'
 import '../styles/Images.css'
 
 const ImageForm = ({rootFolder, imageData}) => {
@@ -14,6 +14,9 @@ const ImageForm = ({rootFolder, imageData}) => {
   }
   const setRejectDecision = (decisionString) => {
     dispatch(setDecision(imageData.id, 'reject'))
+  }
+  const setCommentOnImage = (commentString) => {
+    dispatch(setComment(imageData.id, commentString))
   }
 
   return (
@@ -41,6 +44,7 @@ const ImageForm = ({rootFolder, imageData}) => {
               <label className="btn btn-outline-success" htmlFor={acceptOption}>Accept</label>
               <input type="radio" className="btn-check" name={"options" + imageData.id} id={rejectOption} autoComplete="off" checked={imageData.decision === 'reject'} onClick={setRejectDecision}/>
               <label className="btn btn-outline-danger" htmlFor={rejectOption}>Reject</label>
+              <input placeholder='Type the comment' className='form-control' value={imageData.comment} onChange={(e) => setCommentOnImage(e.target.value)}/>
           </div>
         </div>
       </div>

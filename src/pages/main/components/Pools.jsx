@@ -2,9 +2,9 @@ import React, { useCallback } from 'react'
 import PoolItem from './PoolItem'
 import { getPools } from '../../../redux/actions/poolActions'
 import { useDispatch, useSelector } from 'react-redux'
-import SpinnerButton from './SpinnerButton'
 import { resetError } from '../../../redux/actions/appActions'
 import { useNavigate } from 'react-router-dom'
+import SpinnerGetPoolsButton from './SpinnerGetPoolsButton'
 
 const Pools = () => {
 
@@ -28,7 +28,7 @@ const Pools = () => {
   return (
     <div className="container-fluid">
         <div className="container">
-          <SpinnerButton onClick={handleGetPools}/>
+          <SpinnerGetPoolsButton onClick={handleGetPools}/>
           <button type='button' className='btn btn-info ml-1' onClick={navToImages}>
             Go to images
           </button>

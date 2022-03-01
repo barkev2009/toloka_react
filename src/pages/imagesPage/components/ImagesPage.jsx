@@ -3,15 +3,15 @@ import { connect, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ImageForm from './ImageForm';
 import '../styles/Images.css';
-import { changeAllImages, checkImageSize, checkNamePattern, checkWhiteArea, removeDuplicates } from '../../../redux/actions/imageActions';
+import { changeAllImages, checkImageSize, checkNamePattern, checkWhiteArea, removeDuplicates, sendCheckedTasks } from '../../../redux/actions/imageActions';
 import { useDispatch } from 'react-redux';
 import CheckButton from './CheckButton';
-import { sendCheckedTasks } from '../../../redux/actions/poolActions';
+import SpinnerSendTasksButton from '../../main/components/SpinnerSendTasksButton';
 
 const ImagesPage = ({activePoolID, removeDuplicates}) => {
 
     const folder = '/images/';
-    const images = useSelector(state => state.images.images.filter(img => img.details.pool_id === activePoolID));
+    const images = useSelector(state => state.images.images.filter(img => (img.details.pool_id === activePoolID) && (img.status === 'SUBMITTED')));
     const dispatch = useDispatch();
     const token = useSelector(state => state.token.yaToken)
     const sandbox = useSelector(state => state.sandbox.sandboxOn)
@@ -39,7 +39,6 @@ const ImagesPage = ({activePoolID, removeDuplicates}) => {
         dispatch(changeAllImages(activePoolID, 'reject'))
     }
     const sendTasks = () => {
-        // console.log(sandbox, token)
         dispatch(sendCheckedTasks(sandbox, token, images))
     }
 
@@ -50,9 +49,10 @@ const ImagesPage = ({activePoolID, removeDuplicates}) => {
                 <button type='button' className='btn btn-info' onClick={returnHome}>
                     Return home
                 </button>
-                <button type='button' className='btn btn-primary btn-lg' onClick={sendTasks} disabled={images.length === 0}>
-                    Send response to tasks
-                </button>
+                <SpinnerSendTasksButton 
+                    onClick={sendTasks} 
+                    disabled={images.length === 0 || images.filter(img => img.comment !== undefined && img.comment.trim() !== '').length < images.length}
+                />
             </div>
             <div className="container change-buttons">
                 <div className='changeAll-buttons'>

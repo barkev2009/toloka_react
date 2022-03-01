@@ -1,5 +1,15 @@
 import axios from "axios"
-import { CHANGE_ALL, CHECK_IMAGES_SIZE, CHECK_NAME_PATTERN, CHECK_WHITE_AREA, READ_IMAGES_FROM_POOL, REMOVE_DUPLICATE_NAMES, SET_DECISION } from "../types"
+import { CHANGE_ALL, 
+    CHECK_IMAGES_SIZE, 
+    CHECK_NAME_PATTERN, 
+    CHECK_WHITE_AREA, 
+    READ_IMAGES_FROM_POOL, 
+    REMOVE_DUPLICATE_NAMES, 
+    SEND_CHECKED_TASKS, 
+    SET_COMMENT, 
+    SET_DECISION 
+} from "../types"
+import { hideSendTasksSpinner, showSendTasksSpinner } from "./appActions"
 
 export function readImagesFromPool (token, sandbox, pool_id) {
     return async dispatch => {
@@ -12,7 +22,7 @@ export function readImagesFromPool (token, sandbox, pool_id) {
                 pool_id
             }
         }).then(response => {
-            const imageData = response.data.items.map(item => ({...item, fake_name: item.id + '.' + item.name.split('.').reverse()[0]}))
+            const imageData = response.data.items.filter(img => img.status === 'SUBMITTED').map(item => ({...item, fake_name: item.id + '.' + item.name.split('.').reverse()[0]}))
             dispatch(
                 {
                     type: READ_IMAGES_FROM_POOL,
@@ -96,6 +106,16 @@ export function setDecision(imgId, decisionString) {
     }
 }
 
+export function setComment(imgId, commentString) {
+    return {
+        type: SET_COMMENT,
+        payload: {
+            imgId,
+            commentString
+        }
+    }
+}
+
 export function changeAllImages(poolId, decisionString) {
     return {
         type: CHANGE_ALL,
@@ -104,4 +124,27 @@ export function changeAllImages(poolId, decisionString) {
             decisionString
         }
     }
+}
+
+export function sendCheckedTasks(sandbox, token, items) {
+    return async dispatch => {
+        dispatch(showSendTasksSpinner())
+        axios({
+            method: 'POST',
+            url: 'http://127.0.0.1:8000/send_checked_tasks/',
+            data: {
+                sandbox,
+                token,
+                items
+            }
+        }).then(
+            response => {
+                dispatch({
+                    type: SEND_CHECKED_TASKS,
+                    payload: response.data
+                })
+                dispatch(hideSendTasksSpinner())
+            }
+        )
+    } 
 }

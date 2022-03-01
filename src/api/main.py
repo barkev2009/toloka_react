@@ -3,6 +3,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 import os
+from shutil import rmtree
 from redis import Redis
 import json
 from checks import fname_check, lowest_pix_size, white_pixels_area
@@ -91,8 +92,8 @@ def read_image_names():
 
 @app.get('/read_images_from_pool/')
 def read_images_from_pool(token: Optional[str] = None, sandbox: Optional[str] = True, pool_id: Optional[str] = None):
-    url = f'https://toloka.yandex.com/api/v1/attachments?pool_id={pool_id}' if sandbox == 'false' else \
-        f'https://sandbox.toloka.yandex.com/api/v1/attachments?pool_id={pool_id}'
+    url = f'https://toloka.yandex.com/api/v1/attachments?limit=100&pool_id={pool_id}' if sandbox == 'false' else \
+        f'https://sandbox.toloka.yandex.com/api/v1/attachments?limit=100&pool_id={pool_id}'
     # r = Redis()
 
     # if r.exists(pool_id) == 1:
@@ -106,8 +107,8 @@ def read_images_from_pool(token: Optional[str] = None, sandbox: Optional[str] = 
     ).json()
 
     # Getting assignment statuses
-    url = f'https://toloka.yandex.com/api/v1/assignments?pool_id={pool_id}' if sandbox == 'false' else \
-        f'https://sandbox.toloka.yandex.com/api/v1/assignments?pool_id={pool_id}'
+    url = f'https://toloka.yandex.com/api/v1/assignments?limit=100&pool_id={pool_id}' if sandbox == 'false' else \
+        f'https://sandbox.toloka.yandex.com/api/v1/assignments?limit=100&pool_id={pool_id}'
     assignment_response = requests.get(
         url,
         headers={
@@ -123,8 +124,6 @@ def read_images_from_pool(token: Optional[str] = None, sandbox: Optional[str] = 
                     'status': list(filter(lambda x: x['id'] == item['details']['assignment_id'], assignment_response))[0]['status']
                 }
             )
-
-        print(json.dumps(response['items'], indent=4))
 
     # r.setex(pool_id, 3600, json.dumps(response.json()))
     return response
@@ -197,12 +196,14 @@ async def send_checked_tasks(request: Request):
             url,
             json={
                 'status': (item['decision'] + 'ed').upper(),
-                'public_comment': 'comment'
+                'public_comment': item['comment']
             },
             headers={
                 'Authorization': f'OAuth {body["token"]}',
                 'Content-Type': 'application/JSON'
             }
         )
-        print(response.json())
+        item['status'] = (item['decision'] + 'ed').upper()
 
+    rmtree(FOLDER_NAME)
+    return body['items']
