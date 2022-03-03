@@ -1,11 +1,11 @@
 import axios from "axios";
 import { CLOSE_POOL, GET_POOLS, OPEN_POOL, REFRESH_POOLS, SET_ACTIVE_POOL } from "../types";
-import { resetError, setError, showGetPoolsSpinner, hideGetPoolsSpinner, setInitialSpinner } from "./appActions";
+import { resetError, setError, showGetPoolsSpinner, hideGetPoolsSpinner, setInitialSpinner, showSpinner, hideSpinner } from "./appActions";
 
 
 export function getPools(token, sandbox) {
     return async dispatch => {
-        dispatch(showGetPoolsSpinner());
+        dispatch(showSpinner('poolsLoading'));
         axios({
             method: 'GET',
             url: 'http://127.0.0.1:8000/pools',
@@ -34,7 +34,7 @@ export function getPools(token, sandbox) {
                 } else {
                     dispatch(setError(response.data))
                 }
-                dispatch(hideGetPoolsSpinner());
+                dispatch(hideSpinner('poolsLoading'));
             }
         );     
     }
@@ -62,6 +62,7 @@ export function refreshPools(token, sandbox) {
 
 export function openClosePool(token, sandbox, poolId, action) {
     return async dispatch => {
+        dispatch(showSpinner(poolId));
         axios({
             method: 'POST',
             url: 'http://127.0.0.1:8000/pools/' + action,
@@ -75,14 +76,16 @@ export function openClosePool(token, sandbox, poolId, action) {
                     dispatch(resetError());
                     dispatch({
                         type: action === 'open' ? OPEN_POOL : CLOSE_POOL,
+                        payload: poolId
                     });
-                    dispatch(refreshPools(token, sandbox));  
                 } else {
                     dispatch(setError(response.data));
                 }
             
-            // dispatch(refreshPools(token, sandbox));  
-            });   
+            // dispatch(refreshPools(token, sandbox));
+            dispatch(hideSpinner(poolId));  
+            }
+        );   
     }
 }
 

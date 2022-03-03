@@ -1,14 +1,16 @@
 import { 
     HIDE_GET_POOLS_SPINNER, 
     HIDE_SEND_TASKS_SPINNER, 
+    HIDE_SPINNER, 
     RESET_ERROR, 
     SET_ERROR, 
-    SET_INITIAL_SPINNER, 
+    SET_SPINNER, 
     SHOW_GET_POOLS_SPINNER, 
-    SHOW_SEND_TASKS_SPINNER 
+    SHOW_SEND_TASKS_SPINNER, 
+    SHOW_SPINNER
 } from "../types";
 
-const initialState = {poolsLoading: false, latestError: null, tasksSending: false, spinners: {}};
+const initialState = {latestError: null, spinners: {poolsLoading: false, tasksSending: false}};
 
 export const appReducer = (state=initialState, action) => {
     switch (action.type) {
@@ -24,8 +26,11 @@ export const appReducer = (state=initialState, action) => {
             return {...state, latestError: action.payload}
         case RESET_ERROR:
             return {...state, latestError: null}
-        case SET_INITIAL_SPINNER:
+        case SET_SPINNER:
+        case HIDE_SPINNER:
             return {...state, spinners: {...state.spinners, [action.payload]: false}}
+        case SHOW_SPINNER:
+            return {...state, spinners: {...state.spinners, [action.payload]: true}}
         default:
             return state
     }

@@ -1,4 +1,14 @@
-import { HIDE_GET_POOLS_SPINNER, HIDE_SEND_TASKS_SPINNER, RESET_ERROR, SET_ERROR, SET_INITIAL_SPINNER, SHOW_GET_POOLS_SPINNER, SHOW_SEND_TASKS_SPINNER } from "../types"
+import { 
+    HIDE_GET_POOLS_SPINNER, 
+    HIDE_SEND_TASKS_SPINNER, 
+    HIDE_SPINNER, 
+    RESET_ERROR, 
+    SET_ERROR, 
+    SET_SPINNER, 
+    SHOW_GET_POOLS_SPINNER, 
+    SHOW_SEND_TASKS_SPINNER, 
+    SHOW_SPINNER 
+} from "../types"
 
 export function showGetPoolsSpinner() {
     return {
@@ -39,7 +49,21 @@ export function resetError(errorMessage) {
 
 export function setInitialSpinner(spinnerName) {
     return {
-        type: SET_INITIAL_SPINNER,
+        type: SET_SPINNER,
+        payload: spinnerName
+    }
+}
+
+export function showSpinner(spinnerName) {
+    return {
+        type: SHOW_SPINNER,
+        payload: spinnerName
+    }
+}
+
+export function hideSpinner(spinnerName) {
+    return {
+        type: HIDE_SPINNER,
         payload: spinnerName
     }
 }

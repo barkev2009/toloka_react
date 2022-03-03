@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 
 const SpinnerSendTasksButton = ({onClick, disabled}) => {
 
-    const loading = useSelector(state => state.app.tasksSending)
+    const loading = useSelector(state => state.app.spinners.tasksSending)
 
     return (
         <button type="button" className='btn btn-primary btn-lg' onClick={onClick} disabled={(!disabled && !loading) ? false : true}>

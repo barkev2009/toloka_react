@@ -4,7 +4,7 @@ import './../styles/buttons.css'
 
 const SpinnerGetPoolsButton = ({onClick, className}) => {
 
-    const loading = useSelector(state => state.app.poolsLoading)
+    const loading = useSelector(state => state.app.spinners.poolsLoading)
 
   return (
     <button type="button" className='btn btn-primary' onClick={onClick} disabled={loading ? true : false}>

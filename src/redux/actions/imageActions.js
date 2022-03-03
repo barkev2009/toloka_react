@@ -9,7 +9,7 @@ import { CHANGE_ALL,
     SET_COMMENT, 
     SET_DECISION 
 } from "../types"
-import { hideSendTasksSpinner, showSendTasksSpinner } from "./appActions"
+import { hideSendTasksSpinner, hideSpinner, showSendTasksSpinner, showSpinner } from "./appActions"
 
 export function readImagesFromPool (token, sandbox, pool_id) {
     return async dispatch => {
@@ -128,7 +128,7 @@ export function changeAllImages(poolId, decisionString) {
 
 export function sendCheckedTasks(sandbox, token, items) {
     return async dispatch => {
-        dispatch(showSendTasksSpinner())
+        dispatch(showSpinner('tasksSending'))
         axios({
             method: 'POST',
             url: 'http://127.0.0.1:8000/send_checked_tasks/',
@@ -143,7 +143,7 @@ export function sendCheckedTasks(sandbox, token, items) {
                     type: SEND_CHECKED_TASKS,
                     payload: response.data
                 })
-                dispatch(hideSendTasksSpinner())
+                dispatch(hideSpinner('tasksSending'))
             }
         )
     } 
