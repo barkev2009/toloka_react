@@ -91,7 +91,7 @@ const PoolItem = ({data}) => {
         <div className="btn-group" role="group">
           {
           data.all_tasks_done ? '' : 
-          <button className={btnTheme} disabled={data.status === 'ARCHIVED'} onClick={onClick}>
+          <button className={btnTheme} onClick={onClick}>
             {data.status === 'OPEN' ? 'Close pool' : 'Open pool'}
           </button>
           }

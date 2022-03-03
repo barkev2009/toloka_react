@@ -1,6 +1,6 @@
 import axios from "axios";
 import { CLOSE_POOL, GET_POOLS, OPEN_POOL, REFRESH_POOLS, SET_ACTIVE_POOL } from "../types";
-import { resetError, setError, showGetPoolsSpinner, hideGetPoolsSpinner } from "./appActions";
+import { resetError, setError, showGetPoolsSpinner, hideGetPoolsSpinner, setInitialSpinner } from "./appActions";
 
 
 export function getPools(token, sandbox) {
@@ -18,6 +18,13 @@ export function getPools(token, sandbox) {
                     dispatch(setError(response.data))
                 } else if ('items' in response.data) {
                     dispatch(resetError())
+                    response.data.items.forEach(
+                        item => {
+                            if (!item.all_tasks_done) {
+                                dispatch(setInitialSpinner(item.id))
+                            }
+                        }
+                    )
                     dispatch({
                         type: GET_POOLS,
                         payload: {
