@@ -6,7 +6,7 @@ import '../styles/Images.css';
 import { changeAllImages, checkImageSize, checkNamePattern, checkWhiteArea, removeDuplicates, sendCheckedTasks } from '../../../redux/actions/imageActions';
 import { useDispatch } from 'react-redux';
 import CheckButton from './CheckButton';
-import SpinnerSendTasksButton from '../../main/components/SpinnerSendTasksButton';
+import SpinnerSendTasksButton from '../../main/components/SpinnerButtons/SpinnerSendTasksButton';
 
 const ImagesPage = ({activePoolID, removeDuplicates}) => {
 

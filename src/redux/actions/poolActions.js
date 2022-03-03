@@ -1,6 +1,6 @@
 import axios from "axios";
-import { CLOSE_POOL, GET_POOLS, OPEN_POOL, REFRESH_POOLS, SET_ACTIVE_POOL } from "../types";
-import { resetError, setError, showGetPoolsSpinner, hideGetPoolsSpinner, setInitialSpinner, showSpinner, hideSpinner } from "./appActions";
+import { CLOSE_POOL, GET_POOLS, OPEN_POOL, SET_ACTIVE_POOL } from "../types";
+import { resetError, setError, setInitialSpinner, showSpinner, hideSpinner } from "./appActions";
 
 
 export function getPools(token, sandbox) {
@@ -21,15 +21,14 @@ export function getPools(token, sandbox) {
                     response.data.items.forEach(
                         item => {
                             if (!item.all_tasks_done) {
-                                dispatch(setInitialSpinner(item.id))
+                                dispatch(setInitialSpinner(item.id));
+                                dispatch(setInitialSpinner(`img_${item.id}`));
                             }
                         }
                     )
                     dispatch({
                         type: GET_POOLS,
-                        payload: {
-                            items: response.data.items
-                        }
+                        payload: response.data.items
                     });
                 } else {
                     dispatch(setError(response.data))
@@ -37,26 +36,6 @@ export function getPools(token, sandbox) {
                 dispatch(hideSpinner('poolsLoading'));
             }
         );     
-    }
-}
-
-export function refreshPools(token, sandbox) {
-    return async dispatch => {
-        axios({
-            method: 'GET',
-            url: 'http://127.0.0.1:8000/pools',
-            params: {
-                token,
-                sandbox
-            }
-            }).then(response => {
-            dispatch({
-                    type: REFRESH_POOLS,
-                    payload: {
-                        items: response.data.items
-                    }
-                });
-            });     
     }
 }
 
@@ -82,7 +61,6 @@ export function openClosePool(token, sandbox, poolId, action) {
                     dispatch(setError(response.data));
                 }
             
-            // dispatch(refreshPools(token, sandbox));
             dispatch(hideSpinner(poolId));  
             }
         );   

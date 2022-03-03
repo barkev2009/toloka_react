@@ -9,7 +9,7 @@ import { CHANGE_ALL,
     SET_COMMENT, 
     SET_DECISION 
 } from "../types"
-import { hideSendTasksSpinner, hideSpinner, showSendTasksSpinner, showSpinner } from "./appActions"
+import { hideSpinner, showSpinner } from "./appActions"
 
 export function readImagesFromPool (token, sandbox, pool_id) {
     return async dispatch => {

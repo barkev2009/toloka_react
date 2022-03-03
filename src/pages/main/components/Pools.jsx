@@ -4,7 +4,7 @@ import { getPools } from '../../../redux/actions/poolActions'
 import { useDispatch, useSelector } from 'react-redux'
 import { resetError } from '../../../redux/actions/appActions'
 import { useNavigate } from 'react-router-dom'
-import SpinnerGetPoolsButton from './SpinnerGetPoolsButton'
+import SpinnerGetPoolsButton from './SpinnerButtons/SpinnerGetPoolsButton'
 
 const Pools = () => {
 
@@ -34,8 +34,8 @@ const Pools = () => {
           </button>
         </div>
         {latestError !== 'null' ? <div className='alert alert-danger' role='alert'>{latestError}</div> : <div></div>}
-        {pools.items && pools.items.length !== 0 ? 
-        pools.items.map(item => <PoolItem data={item} key={item.id}/>) :
+        {pools && pools.length !== 0 ? 
+        pools.map(item => <PoolItem data={item} key={item.id}/>) :
         <div className="alert alert-primary" role="alert">No pools to display yet</div>}       
     </div>
   )

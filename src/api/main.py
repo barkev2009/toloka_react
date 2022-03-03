@@ -43,6 +43,8 @@ def get_pools(token: Optional[str] = None, sandbox: Optional[str] = True):
                 'Authorization': f'OAuth {token}',
             }
         )
+        if 'items' not in response.json().keys():
+            return response.json()
         pool_data += response.json()['items']
 
 
@@ -79,6 +81,8 @@ def get_pools(token: Optional[str] = None, sandbox: Optional[str] = True):
             }
         ).json()['items']
         pool['all_tasks_done'] = not (len(assignment_response) < len(task_suites_response))
+        pool['tasks_done'] = len(assignment_response)
+        pool['tasks_overall'] = len(task_suites_response)
 
     return {'items': pool_data}
 
