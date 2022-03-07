@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { connect, useSelector, TypedUseSelectorHook } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ImageForm from './ImageForm';
 import '../styles/Images.css';
