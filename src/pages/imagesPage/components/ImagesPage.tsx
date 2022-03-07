@@ -1,21 +1,20 @@
 import React, { useCallback, useState } from 'react'
-import { connect, useSelector } from 'react-redux';
+import { connect, useSelector, TypedUseSelectorHook } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ImageForm from './ImageForm';
 import '../styles/Images.css';
-import { changeAllImages, checkImageSize, checkNamePattern, checkWhiteArea, removeDuplicates, sendCheckedTasks } from '../../../redux/actions/imageActions';
+import { changeAllImages, checkImageSize, checkNamePattern, checkWhiteArea, removeDuplicates } from '../../../redux/actions/imageActions';
 import { useDispatch } from 'react-redux';
 import CheckButton from './CheckButton';
-import SpinnerSendTasksButton from '../../main/components/SpinnerButtons/SpinnerSendTasksButton';
 import Modal from '../../common/Modal';
+import ModalContent from './ModalContent';
+import {RootState} from '../../../index'
 
 const ImagesPage = ({activePoolID, removeDuplicates}) => {
 
     const folder = '/images/';
-    const images = useSelector(state => state.images.images.filter(img => (img.details.pool_id === activePoolID) && (img.status === 'SUBMITTED')));
+    const images : any = useSelector<RootState>(state => state.images.images.filter(img => (img.details.pool_id === activePoolID) && (img.status === 'SUBMITTED')));
     const dispatch = useDispatch();
-    const token = useSelector(state => state.token.yaToken)
-    const sandbox = useSelector(state => state.sandbox.sandboxOn)
 
     const [modalActive, setModalActive] = useState(false)
 
@@ -41,25 +40,22 @@ const ImagesPage = ({activePoolID, removeDuplicates}) => {
     const rejectAll = () => {
         dispatch(changeAllImages(activePoolID, 'reject'))
     }
-    const sendTasks = () => {
-        dispatch(sendCheckedTasks(sandbox, token, images))
-    }
-
-
+    
     return (
         <div className="container-fluid">
             <Modal active={modalActive} setActive={setModalActive}>
-                Look here, I created modal!
+                <ModalContent images={images}/>
             </Modal>
             <div className="container">
                 <button type='button' className='btn btn-info' onClick={returnHome}>
                     Return home
                 </button>
-                <SpinnerSendTasksButton 
-                    onClick={sendTasks} 
+                <button 
+                    type='button' 
+                    className='btn btn-dark' 
+                    onClick={() => setModalActive(true)} 
                     disabled={images.length === 0 || images.filter(img => img.comment !== undefined && img.comment.trim() !== '').length < images.length}
-                />
-                <button type='button' className='btn btn-dark' onClick={() => setModalActive(true)}>
+                >
                     Send request modal
                 </button>
             </div>

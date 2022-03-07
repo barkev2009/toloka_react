@@ -1,8 +1,13 @@
 {
     "compilerOptions": {
       "target": "ESNext",
-      "lib": ["DOM", "ES2017"]
+      "lib": ["DOM", "ES2017"],
+      "allowSyntheticDefaultImports": true,
+      "jsx": "react",
+      "checkJs": true,
+      "moduleResolution": "node",
+      "allowJs": true,
+      "esModuleInterop": true
     },
-    "include": ["**/*.ts", "**/*.tsx"],
-    "exclude": ["node_modules"]
+    "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "**/*.js"] 
   }
