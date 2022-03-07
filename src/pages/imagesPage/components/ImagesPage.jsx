@@ -17,7 +17,7 @@ const ImagesPage = ({activePoolID, removeDuplicates}) => {
     const token = useSelector(state => state.token.yaToken)
     const sandbox = useSelector(state => state.sandbox.sandboxOn)
 
-    const [modalActive, setModalActive] = useState(true)
+    const [modalActive, setModalActive] = useState(false)
 
     const navigate = useNavigate(); 
     const returnHome = useCallback(
@@ -48,7 +48,9 @@ const ImagesPage = ({activePoolID, removeDuplicates}) => {
 
     return (
         <div className="container-fluid">
-            <Modal active={modalActive} setActive={setModalActive}/>
+            <Modal active={modalActive} setActive={setModalActive}>
+                Look here, I created modal!
+            </Modal>
             <div className="container">
                 <button type='button' className='btn btn-info' onClick={returnHome}>
                     Return home
@@ -57,7 +59,7 @@ const ImagesPage = ({activePoolID, removeDuplicates}) => {
                     onClick={sendTasks} 
                     disabled={images.length === 0 || images.filter(img => img.comment !== undefined && img.comment.trim() !== '').length < images.length}
                 />
-                <button type='button' className='btn btn-dark'>
+                <button type='button' className='btn btn-dark' onClick={() => setModalActive(true)}>
                     Send request modal
                 </button>
             </div>
