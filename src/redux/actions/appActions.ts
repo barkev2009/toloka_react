@@ -1,3 +1,4 @@
+import { appAction } from './../interfaces/appInterfaces';
 import { 
     HIDE_SPINNER, 
     RESET_ERROR, 
@@ -6,34 +7,34 @@ import {
     SHOW_SPINNER 
 } from "../types"
 
-export function setError(errorMessage) {
+export function setError(errorMessage : string) : appAction {
     return {
         type: SET_ERROR,
         payload: errorMessage
     }
 }
 
-export function resetError(errorMessage) {
+export function resetError() : appAction {
     return {
         type: RESET_ERROR
     }
 }
 
-export function setInitialSpinner(spinnerName) {
+export function setInitialSpinner(spinnerName: string) : appAction {
     return {
         type: SET_SPINNER,
         payload: spinnerName
     }
 }
 
-export function showSpinner(spinnerName) {
+export function showSpinner(spinnerName: string) : appAction {
     return {
         type: SHOW_SPINNER,
         payload: spinnerName
     }
 }
 
-export function hideSpinner(spinnerName) {
+export function hideSpinner(spinnerName: string) : appAction {
     return {
         type: HIDE_SPINNER,
         payload: spinnerName
