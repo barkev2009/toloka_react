@@ -1,3 +1,4 @@
+import { appState, appAction } from './../interfaces/appInterfaces';
 import { 
     HIDE_SPINNER, 
     RESET_ERROR, 
@@ -6,9 +7,9 @@ import {
     SHOW_SPINNER
 } from "../types";
 
-const initialState = {latestError: null, spinners: {poolsLoading: false, tasksSending: false}};
+const initialState : appState = {latestError: null, spinners: {poolsLoading: false, tasksSending: false}};
 
-export const appReducer = (state=initialState, action) => {
+export const appReducer = (state : appState = initialState, action : appAction) : appState => {
     switch (action.type) {
         case SET_ERROR:
             return {...state, latestError: action.payload}
