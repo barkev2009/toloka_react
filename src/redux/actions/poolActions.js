@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CLOSE_POOL, GET_POOLS, OPEN_POOL, SET_ACTIVE_POOL } from "../types";
+import { CLOSE_POOL, GET_POOLS, OPEN_POOL, SET_ACTIVE_POOL } from "../types.ts";
 import { resetError, setError, setInitialSpinner, showSpinner, hideSpinner } from "./appActions";
 
 

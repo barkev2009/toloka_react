@@ -1,4 +1,4 @@
-import { CHANGE_SANDBOX } from "../types";
+import { CHANGE_SANDBOX } from "../types.ts";
 
 const initialState = {sandboxOn: true, label: 'Sandbox is on'};
 

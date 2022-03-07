@@ -1,4 +1,4 @@
-import { SET_YATOKEN } from "../types";
+import { SET_YATOKEN } from "../types.ts";
 
 const initialState = {yaToken: localStorage.getItem('yaToken')};
 

@@ -8,7 +8,7 @@ import { CHANGE_ALL,
     SEND_CHECKED_TASKS, 
     SET_COMMENT, 
     SET_DECISION 
-} from "../types"
+} from "../types.ts"
 import { hideSpinner, showSpinner } from "./appActions"
 
 export function readImagesFromPool (token, sandbox, pool_id) {

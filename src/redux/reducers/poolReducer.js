@@ -1,4 +1,4 @@
-import { CLOSE_POOL, GET_POOLS, OPEN_POOL, SET_ACTIVE_POOL } from "../types";
+import { CLOSE_POOL, GET_POOLS, OPEN_POOL, SET_ACTIVE_POOL } from "../types.ts";
 
 const initialState = {pools: [], activePool: ''};
 

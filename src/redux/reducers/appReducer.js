@@ -4,7 +4,7 @@ import {
     SET_ERROR, 
     SET_SPINNER, 
     SHOW_SPINNER
-} from "../types";
+} from "../types.ts";
 
 const initialState = {latestError: null, spinners: {poolsLoading: false, tasksSending: false}};
 

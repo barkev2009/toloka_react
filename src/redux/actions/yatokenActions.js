@@ -1,4 +1,4 @@
-import { SET_YATOKEN } from "../types";
+import { SET_YATOKEN } from "../types.ts";
 
 export function setYaToken (token) {
     localStorage.setItem('yaToken', token);
