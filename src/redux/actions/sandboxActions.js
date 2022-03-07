@@ -1,4 +1,4 @@
-import { CHANGE_SANDBOX } from "../types.ts";
+import { CHANGE_SANDBOX } from "../types";
 
 export function changeSandbox() {
     return {

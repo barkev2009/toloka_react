@@ -4,7 +4,7 @@ import {
     SET_ERROR, 
     SET_SPINNER, 
     SHOW_SPINNER 
-} from "../types.ts"
+} from "../types"
 
 export function setError(errorMessage) {
     return {

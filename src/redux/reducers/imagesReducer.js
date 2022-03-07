@@ -9,7 +9,7 @@ import {
     SEND_CHECKED_TASKS, 
     SET_COMMENT, 
     SET_DECISION 
-} from "../types.ts";
+} from "../types";
 
 const initialState = {images: []};
 
