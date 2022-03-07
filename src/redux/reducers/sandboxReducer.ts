@@ -1,13 +1,5 @@
+import { sandboxAction, sandboxState } from "../interfaces/sandboxInterfaces";
 import { CHANGE_SANDBOX } from "../types";
-
-interface sandboxState {
-    sandboxOn: boolean,
-    label: string
-}
-
-interface sandboxAction {
-    type: string
-}
 
 const initialState : sandboxState = {sandboxOn: true, label: 'Sandbox is on'};
 

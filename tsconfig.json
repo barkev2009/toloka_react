@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
-      // ....
+      "target": "ESNext",
+      "lib": ["DOM", "ES2017"]
     },
     "include": ["**/*.ts", "**/*.tsx"],
     "exclude": ["node_modules"]
