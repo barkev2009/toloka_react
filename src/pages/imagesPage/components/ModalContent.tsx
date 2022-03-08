@@ -7,8 +7,8 @@ import {RootState} from '../../../index'
 const ModalContent = ({images}) => {
 
   const dispatch = useDispatch()
-  const token = useSelector<RootState>(state => state.token.yaToken)
-  const sandbox = useSelector<RootState>(state => state.sandbox.sandboxOn)
+  const token: any = useSelector<RootState>(state => state.token.yaToken)
+  const sandbox: any = useSelector<RootState>(state => state.sandbox.sandboxOn)
 
   const sendTasks = () => {
       dispatch(sendCheckedTasks(sandbox, token, images))
