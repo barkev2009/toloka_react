@@ -3,12 +3,13 @@ import SpinnerSendTasksButton from '../../main/components/SpinnerButtons/Spinner
 import {useDispatch, useSelector} from 'react-redux'
 import { sendCheckedTasks } from '../../../redux/actions/imageActions'
 import {RootState} from '../../../index'
+import YandexForm from './YandexForm'
 
 const ModalContent = ({images}) => {
 
   const dispatch = useDispatch()
-  const token = useSelector<RootState>(state => state.token.yaToken)
-  const sandbox = useSelector<RootState>(state => state.sandbox.sandboxOn)
+  const token : any = useSelector<RootState>(state => state.token.yaToken)
+  const sandbox : any = useSelector<RootState>(state => state.sandbox.sandboxOn)
 
   const sendTasks = () => {
       dispatch(sendCheckedTasks(sandbox, token, images))
@@ -20,6 +21,7 @@ const ModalContent = ({images}) => {
             onClick={sendTasks} 
             disabled={images.length === 0 || images.filter(img => img.comment !== undefined && img.comment.trim() !== '').length < images.length}
         />
+        <YandexForm />
     </div>
   )
 }

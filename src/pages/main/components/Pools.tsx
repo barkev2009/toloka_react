@@ -13,7 +13,6 @@ const Pools = () => {
     const pools: any = useSelector<RootState>(state => state.pools.pools)
     const token: any = useSelector<RootState>(state => state.token.yaToken)
     const sandbox: any = useSelector<RootState>(state => state.sandbox.sandboxOn)
-    const latestError = JSON.stringify(useSelector<RootState>(state => state.app.latestError))
 
     const navigate = useNavigate();
   
@@ -34,7 +33,6 @@ const Pools = () => {
             Go to images
           </button>
         </div>
-        {latestError !== 'null' ? <div className='alert alert-danger' role='alert'>{latestError}</div> : <div></div>}
         {pools && pools.length !== 0 ? 
         pools.map(item => <PoolItem data={item} key={item.id}/>) :
         <div className="alert alert-primary" role="alert">No pools to display yet</div>}       

@@ -54,7 +54,7 @@ const ImagesPage = ({activePoolID, removeDuplicates}) => {
                     type='button' 
                     className='btn btn-dark' 
                     onClick={() => setModalActive(true)} 
-                    disabled={images.length === 0 || images.filter(img => img.comment !== undefined && img.comment.trim() !== '').length < images.length}
+                    // disabled={images.length === 0 || images.filter(img => img.comment !== undefined && img.comment.trim() !== '').length < images.length}
                 >
                     Send request modal
                 </button>
