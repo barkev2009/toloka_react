@@ -10,15 +10,15 @@ const ImageForm = ({rootFolder, imageData}) => {
   const rejectOption = "option2" + imageData.id
   const dispatch = useDispatch()
 
-  const setAcceptDecision = (decisionString) => {
+  const setAcceptDecision = () => {
     dispatch(setDecision(imageData.id, 'accept'));
     setCommentOnImage(ACCEPT_COMMENT);
   }
-  const setRejectDecision = (decisionString) => {
+  const setRejectDecision = () => {
     dispatch(setDecision(imageData.id, 'reject'));
     setCommentOnImage(REJECT_COMMENT);
   }
-  const setCommentOnImage = (commentString) => {
+  const setCommentOnImage = (commentString: string) => {
     dispatch(setComment(imageData.id, commentString))
   }
 

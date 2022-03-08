@@ -2,17 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { readImagesFromPool } from '../../../redux/actions/imageActions';
 import '../styles/PoolItem.css';
-import SpinnerOpenCloseButton from '../components/SpinnerButtons/SpinnerOpenCloseButton';
+import SpinnerOpenCloseButton from './SpinnerButtons/SpinnerOpenCloseButton';
 import SpinnerImgDownloadButton from './SpinnerButtons/SpinnerImgDownloadButton';
+import { RootState } from '../../..';
 
 const PoolItem = ({data}) => {
 
   const [theme, setTheme] = useState('');
  
   const dispatch = useDispatch();
-  const token = useSelector(state => state.token.yaToken)
-  const sandbox = useSelector(state => state.sandbox.sandboxOn)
-  const poolImages = useSelector(state => state.images.images.filter(item => item.details.pool_id === data.id))
+  const token : any = useSelector<RootState>(state => state.token.yaToken)
+  const sandbox : any = useSelector<RootState>(state => state.sandbox.sandboxOn)
+  const poolImages : any = useSelector<RootState>(state => state.images.images.filter(item => item.details.pool_id === data.id))
   const imagesAvailable = poolImages !== undefined ? poolImages.filter(item => item.status === 'SUBMITTED').length : 0
 
 

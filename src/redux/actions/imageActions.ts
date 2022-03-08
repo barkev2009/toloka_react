@@ -1,3 +1,4 @@
+import { imageAction } from './../interfaces/imageInterfaces';
 import axios from "axios"
 import { CHANGE_ALL, 
     CHECK_IMAGES_SIZE, 
@@ -11,7 +12,7 @@ import { CHANGE_ALL,
 } from "../types"
 import { hideSpinner, showSpinner } from "./appActions"
 
-export function readImagesFromPool (token, sandbox, pool_id) {
+export function readImagesFromPool (token : string, sandbox: boolean, pool_id: string) {
     return async dispatch => {
         axios({
             method: 'GET',
@@ -35,14 +36,14 @@ export function readImagesFromPool (token, sandbox, pool_id) {
     }
 }
 
-export function removeDuplicates(poolID) {
+export function removeDuplicates(poolID: string) : imageAction {
     return {
         type: REMOVE_DUPLICATE_NAMES,
         payload: poolID
     }
 }
 
-export function checkNamePattern(imageData) {
+export function checkNamePattern(imageData: Object[]) {
     return async dispatch => {
         axios({
             method: 'POST',
@@ -60,7 +61,7 @@ export function checkNamePattern(imageData) {
     }
 }
 
-export function checkImageSize(imageData) {
+export function checkImageSize(imageData: Object[]) {
     return async dispatch => {
         axios({
             method: 'POST',
@@ -78,7 +79,7 @@ export function checkImageSize(imageData) {
     }
 }
 
-export function checkWhiteArea(imageData) {
+export function checkWhiteArea(imageData: Object[]) {
     return async dispatch => {
         axios({
             method: 'POST',
@@ -96,7 +97,7 @@ export function checkWhiteArea(imageData) {
     }
 }
 
-export function setDecision(imgId, decisionString) {
+export function setDecision(imgId: string, decisionString: string): imageAction {
     return {
         type: SET_DECISION,
         payload: {
@@ -106,7 +107,7 @@ export function setDecision(imgId, decisionString) {
     }
 }
 
-export function setComment(imgId, commentString) {
+export function setComment(imgId: string, commentString: string): imageAction {
     return {
         type: SET_COMMENT,
         payload: {
@@ -116,7 +117,7 @@ export function setComment(imgId, commentString) {
     }
 }
 
-export function changeAllImages(poolId, decisionString) {
+export function changeAllImages(poolId: string, decisionString: string): imageAction {
     return {
         type: CHANGE_ALL,
         payload: {
@@ -126,7 +127,7 @@ export function changeAllImages(poolId, decisionString) {
     }
 }
 
-export function sendCheckedTasks(sandbox, token, items) {
+export function sendCheckedTasks(sandbox: boolean, token: string, items: Object[]) {
     return async dispatch => {
         dispatch(showSpinner('tasksSending'))
         axios({

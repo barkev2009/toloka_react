@@ -1,9 +1,10 @@
+import { poolAction } from './../interfaces/poolInterfaces';
 import axios from "axios";
 import { CLOSE_POOL, GET_POOLS, OPEN_POOL, SET_ACTIVE_POOL } from "../types";
 import { resetError, setError, setInitialSpinner, showSpinner, hideSpinner } from "./appActions";
 
 
-export function getPools(token, sandbox) {
+export function getPools(token: string, sandbox: boolean) {
     return async dispatch => {
         dispatch(showSpinner('poolsLoading'));
         axios({
@@ -39,7 +40,7 @@ export function getPools(token, sandbox) {
     }
 }
 
-export function openClosePool(token, sandbox, poolId, action) {
+export function openClosePool(token: string, sandbox: boolean, poolId: string, action: 'open' | 'close') {
     return async dispatch => {
         dispatch(showSpinner(poolId));
         axios({
@@ -67,7 +68,7 @@ export function openClosePool(token, sandbox, poolId, action) {
     }
 }
 
-export function setActivePool(pool_id) {
+export function setActivePool(pool_id: string) : poolAction {
     return {
         type: SET_ACTIVE_POOL,
         payload: pool_id

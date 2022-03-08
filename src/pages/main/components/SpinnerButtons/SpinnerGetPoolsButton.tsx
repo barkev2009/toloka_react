@@ -1,11 +1,12 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { RootState } from '../../../..'
 import './../../styles/buttons.css'
 
-const SpinnerGetPoolsButton = ({onClick, className}) => {
+const SpinnerGetPoolsButton = ({onClick}) => {
 
-    const loading = useSelector(state => state.app.spinners.poolsLoading)
-    const pools = useSelector(state => state.pools.pools)
+    const loading = useSelector<RootState>(state => state.app.spinners.poolsLoading)
+    const pools : any = useSelector<RootState>(state => state.pools.pools)
 
   return (
     <button type="button" className='btn btn-primary' onClick={onClick} disabled={loading ? true : false}>

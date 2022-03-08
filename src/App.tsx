@@ -4,11 +4,10 @@ import MainPage from "./pages/main/components/MainPage";
 
 function App() {
 
-
   return (
     <Routes>
-      <Route exact path='/' element={<MainPage />} />
-      <Route exact path='/images' element={<ImagesPage />} />
+      <Route path='/' element={<MainPage />} />
+      <Route path='/images' element={<ImagesPage />} />
     </Routes>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../..';
 import { openClosePool } from '../../../../redux/actions/poolActions';
 import './../../styles/buttons.css'
 
@@ -7,9 +8,9 @@ const SpinnerOpenCloseButton = ({poolData}) => {
 
     const [btnTheme, setBtnTheme] = useState('');
     const dispatch = useDispatch()
-    const token = useSelector(state => state.token.yaToken)
-    const sandbox = useSelector(state => state.sandbox.sandboxOn)
-    const loading = useSelector(state => state.app.spinners[poolData.id])
+    const token: any = useSelector<RootState>(state => state.token.yaToken)
+    const sandbox: any = useSelector<RootState>(state => state.sandbox.sandboxOn)
+    const loading = useSelector<RootState>(state => state.app.spinners[poolData.id])
 
     useEffect(
         () => {

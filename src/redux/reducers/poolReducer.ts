@@ -1,8 +1,10 @@
+import { poolAction } from './../interfaces/poolInterfaces';
 import { CLOSE_POOL, GET_POOLS, OPEN_POOL, SET_ACTIVE_POOL } from "../types";
+import { poolState } from "../interfaces/poolInterfaces";
 
-const initialState = {pools: [], activePool: ''};
+const initialState : poolState = {pools: [], activePool: ''};
 
-export const poolReducer = (state=initialState, action) => {
+export const poolReducer = (state : poolState = initialState, action : poolAction): poolState => {
     switch (action.type) {
         case GET_POOLS:
             return {...state, pools: action.payload}

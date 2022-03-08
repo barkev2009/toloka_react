@@ -5,19 +5,20 @@ import { useDispatch, useSelector } from 'react-redux'
 import { resetError } from '../../../redux/actions/appActions'
 import { useNavigate } from 'react-router-dom'
 import SpinnerGetPoolsButton from './SpinnerButtons/SpinnerGetPoolsButton'
+import { RootState } from '../../..'
 
 const Pools = () => {
 
     const dispatch = useDispatch();
-    const pools = useSelector(state => state.pools.pools)
-    const token = useSelector(state => state.token.yaToken)
-    const sandbox = useSelector(state => state.sandbox.sandboxOn)
-    const latestError = JSON.stringify(useSelector(state => state.app.latestError))
+    const pools: any = useSelector<RootState>(state => state.pools.pools)
+    const token: any = useSelector<RootState>(state => state.token.yaToken)
+    const sandbox: any = useSelector<RootState>(state => state.sandbox.sandboxOn)
+    const latestError = JSON.stringify(useSelector<RootState>(state => state.app.latestError))
 
     const navigate = useNavigate();
   
     const navToImages = useCallback(
-      () => navigate('/images', {replace: true}, [navigate]), []
+      () => navigate('/images', {replace: true}), []
     )
 
     const handleGetPools = () => {

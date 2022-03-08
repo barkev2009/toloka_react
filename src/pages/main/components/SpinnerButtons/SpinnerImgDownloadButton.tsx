@@ -3,16 +3,17 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { RootState } from '../../../..'
 import { hideSpinner, showSpinner } from '../../../../redux/actions/appActions'
 import { setActivePool } from '../../../../redux/actions/poolActions'
 
 const SpinnerImgDownloadButton = ({poolID}) => {
 
-    const token = useSelector(state => state.token.yaToken)
-    const sandbox = useSelector(state => state.sandbox.sandboxOn)
-    const poolImages = useSelector(state => state.images.images.filter(item => item.details.pool_id === poolID))
+    const token = useSelector<RootState>(state => state.token.yaToken)
+    const sandbox = useSelector<RootState>(state => state.sandbox.sandboxOn)
+    const poolImages : any = useSelector<RootState>(state => state.images.images.filter(item => item.details.pool_id === poolID))
     const imagesAvailable = poolImages !== undefined ? poolImages.filter(item => item.status === 'SUBMITTED').length : 0
-    const loading = useSelector(state => state.app.spinners[`img_${poolID}`])
+    const loading = useSelector<RootState>(state => state.app.spinners[`img_${poolID}`])
     const dispatch = useDispatch()
     const navigate = useNavigate()
         
@@ -38,7 +39,7 @@ const SpinnerImgDownloadButton = ({poolID}) => {
         setTimeout(
           () => {
                 dispatch(hideSpinner(`img_${poolID}`))
-                navigate('/images', {replace: true}, [navigate])
+                navigate('/images', {replace: true})
             }, 
           1000
         );

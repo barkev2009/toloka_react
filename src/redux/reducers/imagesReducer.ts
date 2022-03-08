@@ -1,3 +1,4 @@
+import { imageState, imageAction } from './../interfaces/imageInterfaces';
 import { ACCEPT_COMMENT, REJECT_COMMENT } from "../../constants";
 import { 
     CHANGE_ALL, 
@@ -11,9 +12,9 @@ import {
     SET_DECISION 
 } from "../types";
 
-const initialState = {images: []};
+const initialState : imageState = {images: []};
 
-export const imagesReducer = (state=initialState, action) => {
+export const imagesReducer = (state : imageState = initialState, action: imageAction) => {
     switch (action.type) {
         case READ_IMAGES_FROM_POOL: // expecting action.payload as [imageData]
             let newImages = []
