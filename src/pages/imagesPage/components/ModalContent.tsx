@@ -10,6 +10,7 @@ const ModalContent = ({images}) => {
   const dispatch = useDispatch()
   const token : any = useSelector<RootState>(state => state.token.yaToken)
   const sandbox : any = useSelector<RootState>(state => state.sandbox.sandboxOn)
+  const yaDiskToken : any = useSelector<RootState>(state => state.token.yaDiskToken)
 
   const sendTasks = () => {
       dispatch(sendCheckedTasks(sandbox, token, images))
@@ -21,7 +22,7 @@ const ModalContent = ({images}) => {
             onClick={sendTasks} 
             disabled={images.length === 0 || images.filter(img => img.comment !== undefined && img.comment.trim() !== '').length < images.length}
         />
-        <YandexForm />
+        {yaDiskToken.toString() === 'null' ? <YandexForm /> : <></>}
     </div>
   )
 }

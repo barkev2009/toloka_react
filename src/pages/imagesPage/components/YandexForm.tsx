@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../..'
 import { setYaDiskID, setYaDiskSecret, setYaDiskUrl, setYaDiskToken } from '../../../redux/actions/tokenActions'
+import '../styles/Images.css'
 
 const YandexForm = () => {
 
@@ -22,10 +23,11 @@ const YandexForm = () => {
     }
 
     return (
-        <div>
-            <input onChange={e => dispatch(setYaDiskID(e.target.value))} className="form-control" placeholder='Your Yandex ID here' value={yaDiskID} />
-            <input onChange={e => dispatch(setYaDiskSecret(e.target.value))} className="form-control" placeholder='Your Yandex Secret here' value={yaDiskSecret} />  
-            <button type='button' className='btn btn-warning' onClick={urlHandler}>
+        <div className='container'>
+            <p>Seems like the system doesn't know about your Yandex.Disk Token. Please, proceed to acquire.</p>
+            <input onChange={e => dispatch(setYaDiskID(e.target.value))} className="form-control mb10" placeholder='Your Yandex ID here' value={yaDiskID} />
+            <input onChange={e => dispatch(setYaDiskSecret(e.target.value))} className="form-control mb10" placeholder='Your Yandex Secret here' value={yaDiskSecret} />  
+            <button type='button' className='btn btn-warning mb10' onClick={urlHandler}>
                 {yaDiskUrl === null ? 'No URL yet' : 'Click to acquire Yandex Token'}
             </button>
             <div className="input-group mb-3">
