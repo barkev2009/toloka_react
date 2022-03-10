@@ -157,6 +157,7 @@ def download_image(
         file_id: Optional[str] = None,
         file_name: Optional[str] = None
 ):
+    print(sandbox)
     url = f'https://toloka.yandex.com/api/v1/attachments/{file_id}/download' if sandbox == 'false' else \
         f'https://sandbox.toloka.yandex.com/api/v1/attachments/{file_id}/download'
     response = requests.get(
@@ -218,7 +219,7 @@ async def send_checked_tasks(request: Request):
         os.mkdir(ACCEPTED_FOLDER)
 
     for item in body['items']:
-        url = f'https://toloka.yandex.com/api/v1/assignments/{item["details"]["assignment_id"]}' if body['sandbox'] == 'false' else \
+        url = f'https://toloka.yandex.com/api/v1/assignments/{item["details"]["assignment_id"]}' if body['sandbox'] == False else \
             f'https://sandbox.toloka.yandex.com/api/v1/assignments/{item["details"]["assignment_id"]}'
         response = requests.patch(
             url,
