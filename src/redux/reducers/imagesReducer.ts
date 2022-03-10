@@ -29,7 +29,7 @@ export const imagesReducer = (state : imageState = initialState, action: imageAc
             )
             return {...state, images: [...state.images, ...newImages]}
         case REMOVE_DUPLICATE_NAMES: // expecting action.payload as string(pool_id), currently sets 'reject' decision to duplicates from state
-            const poolImages = state.images.filter(item => item.details.pool_id === action.payload);
+            const poolImages = state.images.filter(item => (item.details.pool_id === action.payload) && (item.status === 'SUBMITTED'));
             const otherImages = state.images.filter(item => item.details.pool_id !== action.payload);
             let uniqueNames = [];
             let newData = [];
