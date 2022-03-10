@@ -36,11 +36,11 @@ const PoolItem = ({data}) => {
     }, [data.status]
   )
   
-  useEffect(
-    () => {
-      dispatch(readImagesFromPool(token, sandbox, data.id));
-    }, []
-  )
+  // useEffect(
+  //   () => {
+  //     dispatch(readImagesFromPool(token, sandbox, data.id));
+  //   }, []
+  // )
   
   return (
     <div className={theme}>
