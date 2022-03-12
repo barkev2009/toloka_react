@@ -30,6 +30,36 @@ ACCEPT_COMMENT = 'Спасибо за участие!'
 REJECT_COMMENT = 'К сожалению, фото не соответствует требованиям заказчика'
 
 
+def get_recursive(token, url, limit=None):
+    items = []
+    response = requests.get(
+        url,
+        headers={
+            'Authorization': f'OAuth {token}'
+        }
+    )
+    if 'items' not in response.json().keys():
+        return response.json()
+    items += response.json()['items']
+
+    if response.json()['has_more']:
+        has_more = True
+        while has_more:
+            if limit is not None and len(items) >= limit:
+                break
+            last_id = response.json()['items'][-1]['id']
+
+            response = requests.get(
+                f'{url}&id_gt={last_id}',
+                headers={
+                    'Authorization': f'OAuth {token}'
+                }
+            )
+            items += response.json()['items']
+            has_more = response.json()['has_more']
+    return items
+
+
 @app.get("/pools/")
 def get_pools(token: Optional[str] = None, sandbox: Optional[str] = True):
 
@@ -37,16 +67,10 @@ def get_pools(token: Optional[str] = None, sandbox: Optional[str] = True):
     for status in ['OPEN', 'CLOSED']:
         url = f'https://toloka.yandex.com/api/v1/pools?limit=300&sort=-created&status={status}' if sandbox == 'false' else \
             f'https://sandbox.toloka.yandex.com/api/v1/pools?limit=300&sort=-created&status={status}'
-        response = requests.get(
-            url,
-            headers={
-                'Authorization': f'OAuth {token}',
-            }
-        )
-        if 'items' not in response.json().keys():
-            return response.json()
-        pool_data += response.json()['items']
-
+        resp_items = get_recursive(token, url)
+        if type(resp_items) == dict:
+            return resp_items
+        pool_data += resp_items
 
     project_ids = [item['project_id'] for item in pool_data]
     project_names = {}
@@ -66,23 +90,13 @@ def get_pools(token: Optional[str] = None, sandbox: Optional[str] = True):
         pool['project_name'] = project_names[pool['project_id']]
         url = f'https://toloka.yandex.com/api/v1/assignments?limit=100&pool_id={pool["id"]}' if sandbox == 'false' else \
             f'https://sandbox.toloka.yandex.com/api/v1/assignments?limit=100&pool_id={pool["id"]}'
-        assignment_response = requests.get(
-            url,
-            headers={
-                'Authorization': f'OAuth {token}',
-            }
-        ).json()['items']
+        assignment_resp_items = get_recursive(token, url, limit=1000)
         url = f'https://toloka.yandex.com/api/v1/task-suites?limit=100&pool_id={pool["id"]}' if sandbox == 'false' else \
             f'https://sandbox.toloka.yandex.com/api/v1/task-suites?limit=100&pool_id={pool["id"]}'
-        task_suites_response = requests.get(
-            url,
-            headers={
-                'Authorization': f'OAuth {token}',
-            }
-        ).json()['items']
-        pool['all_tasks_done'] = not (len(assignment_response) < len(task_suites_response))
-        pool['tasks_done'] = len(assignment_response)
-        pool['tasks_overall'] = len(task_suites_response)
+        task_suites_resp_items = get_recursive(token, url, limit=1000)
+        pool['all_tasks_done'] = not (len(assignment_resp_items) < len(task_suites_resp_items))
+        pool['tasks_done'] = len(assignment_resp_items)
+        pool['tasks_overall'] = len(task_suites_resp_items)
 
     return {'items': pool_data}
 
@@ -120,34 +134,25 @@ def read_images_from_pool(token: Optional[str] = None, sandbox: Optional[str] = 
     # if r.exists(pool_id) == 1:
     #     return json.loads(r.get(pool_id))
     # else:
-    response = requests.get(
-        url,
-        headers={
-            'Authorization': f'OAuth {token}',
-        }
-    ).json()
+    attachments = get_recursive(token, url, limit=1000)
 
     # Getting assignment statuses
     url = f'https://toloka.yandex.com/api/v1/assignments?limit=100&pool_id={pool_id}' if sandbox == 'false' else \
         f'https://sandbox.toloka.yandex.com/api/v1/assignments?limit=100&pool_id={pool_id}'
-    assignment_response = requests.get(
-        url,
-        headers={
-            'Authorization': f'OAuth {token}',
-        }
-    ).json()['items']
+    assignments = get_recursive(token, url, limit=1000)
 
-    if 'items' in response.keys():
-        for item in response['items']:
-            # item['status'] = list(filter(lambda x: x['id'] == item['details']['assignment_id'], assignment_response))[0]['status']
-            item.update(
-                {
-                    'status': list(filter(lambda x: x['id'] == item['details']['assignment_id'], assignment_response))[0]['status']
-                }
-            )
+    if type(assignments):
+        for item in attachments:
+            list_for_filter = list(filter(lambda x: x['id'] == item['details']['assignment_id'], assignments))
+            if list_for_filter:
+                item.update(
+                    {
+                        'status': list_for_filter[0]['status']
+                    }
+                )
 
     # r.setex(pool_id, 3600, json.dumps(response.json()))
-    return response
+    return {"items": attachments}
 
 
 @app.get('/download_image/')
