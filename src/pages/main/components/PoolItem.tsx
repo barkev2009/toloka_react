@@ -43,12 +43,15 @@ const PoolItem = ({data}) => {
         <p className="card-text">{`Project Name: ${data.project_name}`}</p>
         <p className="card-text">{`Created on: ${data.created.slice(0, -4).replace('T', ' ')}`}</p>
         <p className="card-text">{`Tasks done: ${data.tasks_done} / ${data.tasks_overall}`}</p>
-        <div className="btn-group" role="group">
-          {
-          data.all_tasks_done ? '' : 
-          <SpinnerOpenCloseButton poolData={data}/>
-          }
-          {imagesAvailable !== 0 ? <SpinnerImgDownloadButton poolID={data.id}/> : <p></p>}
+        <div className="buttons-container">
+          <div className="btn-group" role="group">
+            {
+            data.all_tasks_done ? '' : 
+            <SpinnerOpenCloseButton poolData={data}/>
+            }
+            {imagesAvailable !== 0 ? <SpinnerImgDownloadButton poolID={data.id}/> : <p></p>}
+          </div>
+          <button className='btn-tasks btn btn-outline-info'>Add tasks</button>
         </div>
     </div>
     </div>
