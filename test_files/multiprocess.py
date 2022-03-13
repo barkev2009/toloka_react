@@ -85,7 +85,7 @@ def process_chunk(data):
 
 if __name__ == '__main__':
     t0 = perf_counter()
-    attachments_url = 'https://toloka.yandex.com/api/v1/attachments?pool_id=31531273&sort=id&limit=100'
+    attachments_url = 'https://toloka.yandex.com/api/v1/attachments?pool_id=32280321&sort=id&limit=100'
     attachments = get_recursive(toloka_token, attachments_url, 1000)
     t1 = perf_counter()
     print(f'Time taken for collecting (Python): {round((t1 - t0), 2)} seconds')

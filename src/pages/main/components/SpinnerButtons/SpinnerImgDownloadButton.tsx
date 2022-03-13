@@ -47,8 +47,10 @@ const SpinnerImgDownloadButton = ({poolID}) => {
         })
 
         dispatch(setActivePool(poolID));
+
         dispatch(hideSpinner(`img_${poolID}`));
         navigate('/images', {replace: true});
+
         // setTimeout(
         //   () => {
         //         dispatch(hideSpinner(`img_${poolID}`))

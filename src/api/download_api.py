@@ -84,7 +84,7 @@ def get_chunks_number(data: list, num_chunks: int):
 
 
 def process_image(sandbox: str, token: str, image_data: list):
-    url = f'https://toloka.yandex.com/api/v1/attachments/{image_data["id"]}/download' if sandbox == 'false' else \
+    url = f'https://toloka.yandex.com/api/v1/attachments/{image_data["id"]}/download' if sandbox == False else \
         f'https://sandbox.toloka.yandex.com/api/v1/attachments/{image_data["id"]}/download'
     response = get(
         url,
@@ -93,7 +93,6 @@ def process_image(sandbox: str, token: str, image_data: list):
         }
     )
     file_name = image_data["fake_name"]
-
     with open(os.path.join(IMAGES_FOLDER, file_name), 'wb') as file:
         file.write(response.content)
 

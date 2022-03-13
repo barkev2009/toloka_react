@@ -8,6 +8,7 @@ from redis import Redis
 import json
 from checks import fname_check, lowest_pix_size, white_pixels_area
 from download_api import get_recursive, process_all_images
+from pydantic import BaseModel
 
 
 app = FastAPI()
@@ -29,6 +30,12 @@ PUBLIC_FOLDER = '../../public'
 ACCEPTED_FOLDER = '../../public/accepted'
 ACCEPT_COMMENT = 'Спасибо за участие!'
 REJECT_COMMENT = 'К сожалению, фото не соответствует требованиям заказчика'
+
+
+class DownloadBody(BaseModel):
+    sandbox: bool;
+    token: str;
+    imageData: list
 
 
 @app.get("/pools/")
@@ -155,9 +162,9 @@ def download_image(
 
 
 @app.post('/download_images')
-async def download_images(request: Request):
-    body = await request.json()
-    process_all_images(body["sandbox"], body["token"], body["imageData"], 3, 16)
+def download_images(body: DownloadBody):
+    # body = request.json()
+    process_all_images(body.sandbox, body.token, body.imageData, 3, 16)
 
 
 @app.post('/check_name_pattern/')
