@@ -50,14 +50,6 @@ const SpinnerImgDownloadButton = ({poolID}) => {
 
         dispatch(hideSpinner(`img_${poolID}`));
         navigate('/images', {replace: true});
-
-        // setTimeout(
-        //   () => {
-        //         dispatch(hideSpinner(`img_${poolID}`))
-        //         navigate('/images', {replace: true})
-        //     }, 
-        //   1000
-        // );
       }
     return (
         <button type="button" className='btn btn-warning' onClick={downloadImages} disabled={loading ? true : false}>
