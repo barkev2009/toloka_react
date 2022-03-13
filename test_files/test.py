@@ -15,7 +15,7 @@ suites_url = 'https://toloka.yandex.com/api/v1/task-suites?pool_id=31500595&sort
 pools_url = 'https://toloka.yandex.com/api/v1/pools?sort=id&limit=300'
 
 
-def get_recursive(token, url):
+def get_recursive(token, url, limit=None):
     items = []
     response = get(
         url,
@@ -23,12 +23,15 @@ def get_recursive(token, url):
             'Authorization': f'OAuth {token}'
         }
     )
-    # print(response.json())
+    if 'items' not in response.json().keys():
+        return response.json()
     items += response.json()['items']
 
     if response.json()['has_more']:
         has_more = True
         while has_more:
+            if limit is not None and len(items) >= limit:
+                break
             last_id = response.json()['items'][-1]['id']
 
             response = get(

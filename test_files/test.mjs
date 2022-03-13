@@ -1,12 +1,11 @@
 import axios from 'axios'
 import { performance } from 'perf_hooks';
 import fs from 'fs'
-import stream from 'stream'
 
 
 const tolokaToken = 'AgAAAAA7bQhFAACtpUs2RzuyK092hHU20esRLcg'
 
-const getRecursive = async (token, url) => {
+const getRecursive = async (token, url, limit=undefined) => {
     let items = [];
     let response = await axios({
         method: 'GET',
@@ -19,6 +18,9 @@ const getRecursive = async (token, url) => {
     if (response.data.has_more) {
         let hasMore = true;
         while (hasMore) {
+            if (limit !== undefined && items.length >= limit) {
+                break
+            }
             let lastId = response.data.items[response.data.items.length - 1].id;
             response = await axios({
                 method: 'GET',
@@ -114,7 +116,7 @@ const processImages = async (chunk, responses) => {
             const response = responses[i];
             const fileName = chunk[i].id + '.jpg'
             if (response !== undefined) {
-                await response.data.pipe(fs.createWriteStream(`test_files/test_images/${fileName}`))
+                response.data.pipe(fs.createWriteStream(`test_files/test_images/${fileName}`))
                 // const imgStream = new stream.PassThrough()
                 // imgStream.end(Buffer.from(response.data, 'binary'))
                 // const wStream = fs.createWriteStream(`test_files/test_images/${fileName}`)
@@ -139,44 +141,29 @@ const downloadChunk = async (chunk) => {
     // }
 }
 
+const downloadByChunks = async (items) => {
+    const itemChunks = getChunks(items, 16);
+    for (let chunk_i = 0; chunk_i < itemChunks.length; chunk_i++) {
+        await downloadChunk(itemChunks[chunk_i])
+    }
+}
+
 const t0 = performance.now()
-const testItems = await getRecursive(tolokaToken, 'https://toloka.yandex.com/api/v1/attachments?pool_id=31531273&sort=id&limit=100');
+let testItems = await getRecursive(tolokaToken, 'https://toloka.yandex.com/api/v1/attachments?pool_id=31531273&sort=id&limit=100', 1000);
+// testItems = testItems.slice(0, 1);
 const t1 = performance.now()
 console.log(`Time taken for collecting (JavaScript): ${((t1 - t0) / 1000).toFixed(2)} seconds`)
+console.log(testItems.length)
 
 
-
-// const itemChunks = getChunks(testItems, 100);
-
-// for (let chunk_i = 0; chunk_i < itemChunks.length; chunk_i++) {
-//     await downloadChunk(itemChunks[chunk_i])
-// }
+await downloadByChunks(testItems)
 
 
-
-// for (let i = 0; i < 100; i++) {
+// for (let i = 0; i < testItems.length; i++) {
 //     const item = testItems[i];
 //     const fileName = item.id + '.jpg';
 //     await downloadImage(item.id, fileName) 
 // }
-
-
-
-
-testItems.slice(0, 100).forEach(
-    item => {
-        axios({
-            method: 'GET',
-            url: 'http://127.0.0.1:8000/download_image/',
-            params : {
-              sandbox: false,
-              token: tolokaToken,
-              file_id: item.id,
-              file_name: item.id + '.jpg'
-            },
-        })
-    }
-)
 
 
 

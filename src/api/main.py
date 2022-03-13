@@ -7,6 +7,7 @@ from shutil import rmtree, copyfile
 from redis import Redis
 import json
 from checks import fname_check, lowest_pix_size, white_pixels_area
+from download_api import get_recursive, process_all_images
 
 
 app = FastAPI()
@@ -30,38 +31,8 @@ ACCEPT_COMMENT = 'Спасибо за участие!'
 REJECT_COMMENT = 'К сожалению, фото не соответствует требованиям заказчика'
 
 
-def get_recursive(token, url, limit=None):
-    items = []
-    response = requests.get(
-        url,
-        headers={
-            'Authorization': f'OAuth {token}'
-        }
-    )
-    if 'items' not in response.json().keys():
-        return response.json()
-    items += response.json()['items']
-
-    if response.json()['has_more']:
-        has_more = True
-        while has_more:
-            if limit is not None and len(items) >= limit:
-                break
-            last_id = response.json()['items'][-1]['id']
-
-            response = requests.get(
-                f'{url}&id_gt={last_id}',
-                headers={
-                    'Authorization': f'OAuth {token}'
-                }
-            )
-            items += response.json()['items']
-            has_more = response.json()['has_more']
-    return items
-
-
 @app.get("/pools/")
-def get_pools(token: Optional[str] = None, sandbox: Optional[str] = True):
+def get_pools(token: Optional[str] = None, sandbox: Optional[str] = None):
 
     pool_data = []
     for status in ['OPEN', 'CLOSED']:
@@ -104,7 +75,7 @@ def get_pools(token: Optional[str] = None, sandbox: Optional[str] = True):
 @app.post('/pools/{action}/')
 def open_pool(
     token: Optional[str] = None,
-    sandbox: Optional[str] = True,
+    sandbox: Optional[str] = None,
     pool_id: Optional[str] = None,
     action: Optional[str] = None
 ):
@@ -126,7 +97,7 @@ def read_image_names():
 
 
 @app.get('/read_images_from_pool/')
-def read_images_from_pool(token: Optional[str] = None, sandbox: Optional[str] = True, pool_id: Optional[str] = None):
+def read_images_from_pool(token: Optional[str] = None, sandbox: Optional[str] = None, pool_id: Optional[str] = None):
     url = f'https://toloka.yandex.com/api/v1/attachments?limit=100&pool_id={pool_id}' if sandbox == 'false' else \
         f'https://sandbox.toloka.yandex.com/api/v1/attachments?limit=100&pool_id={pool_id}'
     # r = Redis()
@@ -158,7 +129,7 @@ def read_images_from_pool(token: Optional[str] = None, sandbox: Optional[str] = 
 @app.get('/download_image/')
 def download_image(
         token: Optional[str] = None,
-        sandbox: Optional[str] = True,
+        sandbox: Optional[str] = None,
         file_id: Optional[str] = None,
         file_name: Optional[str] = None
 ):
@@ -172,7 +143,7 @@ def download_image(
         }
     )
 
-    file_name = f'{file_id}.{file_name.split(".")[-1]}'
+    # file_name = f'{file_id}.{file_name.split(".")[-1]}'
 
     if 'images' not in os.listdir(PUBLIC_FOLDER):
         os.mkdir(IMAGES_FOLDER)
@@ -181,6 +152,12 @@ def download_image(
     else:
         with open(os.path.join(IMAGES_FOLDER, file_name), 'wb') as file:
             file.write(response.content)
+
+
+@app.post('/download_images')
+async def download_images(request: Request):
+    body = await request.json()
+    process_all_images(body["sandbox"], body["token"], body["imageData"], 3, 16)
 
 
 @app.post('/check_name_pattern/')
