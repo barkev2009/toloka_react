@@ -63,9 +63,10 @@ def get_pools(token: Optional[str] = None, sandbox: Optional[str] = None):
                 'Authorization': f'OAuth {token}',
             }
         )
-        project_names[project_id] = project_response.json()['public_name']
+        project_names[project_id] = [project_response.json()['public_name'], project_response.json()['task_spec']['input_spec']]
     for pool in pool_data:
-        pool['project_name'] = project_names[pool['project_id']]
+        pool['project_name'] = project_names[pool['project_id']][0]
+        pool['input_spec'] = project_names[pool['project_id']][1]
         url = f'https://toloka.yandex.com/api/v1/assignments?limit=100&pool_id={pool["id"]}' if sandbox == 'false' else \
             f'https://sandbox.toloka.yandex.com/api/v1/assignments?limit=100&pool_id={pool["id"]}'
         assignment_resp_items = get_recursive(token, url, limit=1000)
