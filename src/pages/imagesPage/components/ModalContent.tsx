@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import { sendCheckedTasks } from '../../../redux/actions/imageActions'
 import {RootState} from '../../../index'
 import YandexForm from './YandexForm'
+import GetPoligonToken from './GetPoligonToken'
 
 const ModalContent = ({images}) => {
 
@@ -18,12 +19,12 @@ const ModalContent = ({images}) => {
   }
 
   return (
-    <div>
+    <div className='change-buttons'>
         <SpinnerSendTasksButton 
             onClick={sendTasks} 
             disabled={images.length === 0 || images.filter(img => img.comment !== undefined && img.comment.trim() !== '').length < images.length}
         />
-        {yaDiskToken.toString() === 'null' ? <YandexForm /> : <></>}
+        {yaDiskToken.toString() === 'null' ? <GetPoligonToken /> : <></>}
     </div>
   )
 }

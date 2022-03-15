@@ -44,7 +44,7 @@ const YandexForm = () => {
                     className="btn btn-outline-warning" 
                     type="button" 
                     id="button-addon2" 
-                    onClick={() => dispatch(setYaDiskToken(yaDiskID, yaDiskSecret, tempCode))}
+                    // onClick={() => dispatch(setYaDiskToken(yaDiskID, yaDiskSecret, tempCode))}
                 >
                     Get Yandex Token
                 </button>

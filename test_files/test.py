@@ -6,9 +6,6 @@ from requests import get
 
 # Token = AQAAAAADveuLAAct8hKjsmCSIkCiqK0fF98JuUM
 
-# y = yadisk.YaDisk(token='AQAAAAADveuLAAct8hKjsmCSIkCiqK0fF98JuUM')
-# print(list(y.listdir("/Приложения")))
-
 # toloka_token = 'AQAAAABVFx8TAAIbupmTNSLnLE9ostJWyUWHY-M'
 toloka_token = 'AgAAAAA7bQhFAACtpUs2RzuyK092hHU20esRLcg'
 suites_url = 'https://toloka.yandex.com/api/v1/task-suites?pool_id=31500595&sort=id&limit=300'
@@ -43,3 +40,6 @@ def get_recursive(token, url, limit=None):
             items += response.json()['items']
             has_more = response.json()['has_more']
     return items
+
+y = yadisk.YaDisk(token='AQAAAAADveuLAAct8hKjsmCSIkCiqK0fF98JuUM')
+print(list(y.listdir("/Приложения")))

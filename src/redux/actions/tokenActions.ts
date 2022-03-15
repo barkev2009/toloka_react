@@ -55,31 +55,39 @@ export function setYaDiskUrl(ID: string, secret: string) {
     }
 }
 
-export function setYaDiskToken(ID: string, secret: string, code: string) {
-    return async dispatch => {
-        axios({
-            method: 'GET',
-            url: 'http://127.0.0.1:8000/getYaDiskToken/',
-            params: {
-                ID,
-                secret,
-                code
-            }
-        }).then(
-            response => {
-                if (response.data.status === 'SUCCESS') {
-                    dispatch(resetError());
-                    localStorage.setItem('yaDiskToken', response.data.payload)
-                    dispatch(
-                        {
-                            type: SET_YADISK_TOKEN,
-                            payload: response.data.payload
-                        }
-                    );
-                } else {
-                    dispatch(setError(JSON.stringify(response.data)))
-                }                
-            }
-        )
+// export function setYaDiskToken(ID: string, secret: string, code: string) {
+//     return async dispatch => {
+//         axios({
+//             method: 'GET',
+//             url: 'http://127.0.0.1:8000/getYaDiskToken/',
+//             params: {
+//                 ID,
+//                 secret,
+//                 code
+//             }
+//         }).then(
+//             response => {
+//                 if (response.data.status === 'SUCCESS') {
+//                     dispatch(resetError());
+//                     localStorage.setItem('yaDiskToken', response.data.payload)
+//                     dispatch(
+//                         {
+//                             type: SET_YADISK_TOKEN,
+//                             payload: response.data.payload
+//                         }
+//                     );
+//                 } else {
+//                     dispatch(setError(JSON.stringify(response.data)))
+//                 }                
+//             }
+//         )
+//     }
+// }
+
+export function setYaDiskToken(token: string) {
+    localStorage.setItem('yaDiskToken', token)
+    return {
+        type: SET_YADISK_TOKEN,
+        payload: token
     }
 }
