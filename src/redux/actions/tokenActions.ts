@@ -7,7 +7,7 @@ import {
 } from './../types';
 import axios from 'axios';
 import { tokenAction } from './../interfaces/tokenInterfaces';
-import { resetError, setError } from './appActions';
+// import { resetError, setError } from './appActions';
 
 export function setYaToken (token: string) : tokenAction {
     localStorage.setItem('yaToken', token);

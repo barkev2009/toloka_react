@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../..'
-import { setYaDiskID, setYaDiskSecret, setYaDiskUrl, setYaDiskToken } from '../../../redux/actions/tokenActions'
+import { setYaDiskID, setYaDiskSecret, setYaDiskUrl } from '../../../redux/actions/tokenActions'
 import '../styles/Images.css'
 
 const YandexForm = () => {

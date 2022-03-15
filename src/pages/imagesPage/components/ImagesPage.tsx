@@ -3,21 +3,21 @@ import { connect, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ImageForm from './ImageForm';
 import '../styles/Images.css';
-import { changeAllImages, checkImageSize, checkNamePattern, checkWhiteArea, removeDuplicates, sendCheckedTasks } from '../../../redux/actions/imageActions';
+import { changeAllImages, checkImageSize, checkNamePattern, checkWhiteArea, removeDuplicates } from '../../../redux/actions/imageActions';
 import { useDispatch } from 'react-redux';
 import CheckButton from './CheckButton';
 import Modal from '../../common/Modal';
 import ModalContent from './ModalContent';
 import {RootState} from '../../../index'
-import SpinnerSendTasksButton from '../../main/components/SpinnerButtons/SpinnerSendTasksButton';
+// import SpinnerSendTasksButton from '../../main/components/SpinnerButtons/SpinnerSendTasksButton';
 
 const ImagesPage = ({activePoolID, removeDuplicates}) => {
 
     const folder = '/images/';
     const images : any = useSelector<RootState>(state => state.images.images.filter(img => (img.details.pool_id === activePoolID) && (img.status === 'SUBMITTED')));
     const dispatch = useDispatch();
-    const token: any = useSelector<RootState>(state => state.token.yaToken)
-    const sandbox: any = useSelector<RootState>(state => state.sandbox.sandboxOn)
+    // const token: any = useSelector<RootState>(state => state.token.yaToken)
+    // const sandbox: any = useSelector<RootState>(state => state.sandbox.sandboxOn)
 
     const [modalActive, setModalActive] = useState(false)
 
@@ -43,9 +43,9 @@ const ImagesPage = ({activePoolID, removeDuplicates}) => {
     const rejectAll = () => {
         dispatch(changeAllImages(activePoolID, 'reject'))
     }
-    const sendTasks = () => {
-        dispatch(sendCheckedTasks(sandbox, token, images))
-    }
+    // const sendTasks = () => {
+    //     dispatch(sendCheckedTasks(sandbox, token, images))
+    // }
     
     return (
         <div className="container-fluid">
