@@ -30,19 +30,26 @@ const SpinnerImgDownloadButton = ({poolID}) => {
         })
       }
 
-    const downloadImages = () => {
+    const downloadImages = async () => {
         dispatch(showSpinner(`img_${poolID}`))
-        poolImages.forEach(img => {
-          downloadImage(sandbox, token, img.id, img.name);
-        });
+        // poolImages.forEach(img => {
+        //   downloadImage(sandbox, token, img.id, img.fake_name);
+        // });
+
+        await axios({
+          method: 'POST',
+          url: 'http://127.0.0.1:8000/download_images/',
+          data: {
+            sandbox,
+            token,
+            imageData: poolImages
+          }
+        })
+
         dispatch(setActivePool(poolID));
-        setTimeout(
-          () => {
-                dispatch(hideSpinner(`img_${poolID}`))
-                navigate('/images', {replace: true})
-            }, 
-          1000
-        );
+
+        dispatch(hideSpinner(`img_${poolID}`));
+        navigate('/images', {replace: true});
       }
     return (
         <button type="button" className='btn btn-warning' onClick={downloadImages} disabled={loading ? true : false}>

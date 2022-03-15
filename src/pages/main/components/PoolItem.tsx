@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { readImagesFromPool } from '../../../redux/actions/imageActions';
+import { useSelector } from 'react-redux';
 import '../styles/PoolItem.css';
 import SpinnerOpenCloseButton from './SpinnerButtons/SpinnerOpenCloseButton';
 import SpinnerImgDownloadButton from './SpinnerButtons/SpinnerImgDownloadButton';
@@ -10,9 +9,6 @@ const PoolItem = ({data}) => {
 
   const [theme, setTheme] = useState('');
  
-  const dispatch = useDispatch();
-  const token : any = useSelector<RootState>(state => state.token.yaToken)
-  const sandbox : any = useSelector<RootState>(state => state.sandbox.sandboxOn)
   const poolImages : any = useSelector<RootState>(state => state.images.images.filter(item => item.details.pool_id === data.id))
   const imagesAvailable = poolImages !== undefined ? poolImages.filter(item => item.status === 'SUBMITTED').length : 0
 
@@ -36,12 +32,7 @@ const PoolItem = ({data}) => {
     }, [data.status]
   )
   
-  useEffect(
-    () => {
-      dispatch(readImagesFromPool(token, sandbox, data.id));
-    }, []
-  )
-  
+ 
   return (
     <div className={theme}>
     <div className="card-header">

@@ -2,6 +2,7 @@ import { poolAction } from './../interfaces/poolInterfaces';
 import axios from "axios";
 import { CLOSE_POOL, GET_POOLS, OPEN_POOL, SET_ACTIVE_POOL } from "../types";
 import { resetError, setError, setInitialSpinner, showSpinner, hideSpinner } from "./appActions";
+import { readImagesFromPool } from './imageActions';
 
 
 export function getPools(token: string, sandbox: boolean) {
@@ -25,6 +26,7 @@ export function getPools(token: string, sandbox: boolean) {
                                 dispatch(setInitialSpinner(item.id));
                                 dispatch(setInitialSpinner(`img_${item.id}`));
                             }
+                            dispatch(readImagesFromPool(token ,sandbox, item.id));
                         }
                     )
                     dispatch({

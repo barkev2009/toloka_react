@@ -29,7 +29,7 @@ export const imagesReducer = (state : imageState = initialState, action: imageAc
             )
             return {...state, images: [...state.images, ...newImages]}
         case REMOVE_DUPLICATE_NAMES: // expecting action.payload as string(pool_id), currently sets 'reject' decision to duplicates from state
-            const poolImages = state.images.filter(item => item.details.pool_id === action.payload);
+            const poolImages = state.images.filter(item => (item.details.pool_id === action.payload) && (item.status === 'SUBMITTED'));
             const otherImages = state.images.filter(item => item.details.pool_id !== action.payload);
             let uniqueNames = [];
             let newData = [];
@@ -49,9 +49,11 @@ export const imagesReducer = (state : imageState = initialState, action: imageAc
         case CHECK_NAME_PATTERN: // expecting action.payload as [imageData]
         case CHECK_IMAGES_SIZE:
         case CHECK_WHITE_AREA:
-        case SEND_CHECKED_TASKS:
             const otherImagesCheck = state.images.filter(item => item.details.pool_id !== action.payload[0].details.pool_id);
             return {...state, images: [...otherImagesCheck, ...action.payload]}
+        case SEND_CHECKED_TASKS:
+            const otherImagesSend = state.images.filter(item => item.details.pool_id !== action.payload[0].details.pool_id);
+            return {...state, images: [...otherImagesSend]}
         case SET_DECISION: // expecting action.payload as {imgId, decisionString}
             let decisionImage = state.images.filter(item => item.id === action.payload.imgId)[0]
             decisionImage.decision = action.payload.decisionString

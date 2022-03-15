@@ -12,6 +12,7 @@ const ModalContent = ({images}) => {
   const sandbox : any = useSelector<RootState>(state => state.sandbox.sandboxOn)
   const yaDiskToken : any = useSelector<RootState>(state => state.token.yaDiskToken)
 
+
   const sendTasks = () => {
       dispatch(sendCheckedTasks(sandbox, token, images))
   }

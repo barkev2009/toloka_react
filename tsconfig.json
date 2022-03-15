@@ -10,5 +10,5 @@
       "esModuleInterop": true,
       "outDir": "./src"
     },
-    "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "**/*.js"] 
+    "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "**/*.js", "test_files/test.mjs"] 
   }

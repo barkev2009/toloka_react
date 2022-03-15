@@ -5,6 +5,7 @@
 src/api/__pycache__
 public/images
 public/accepted
+*/__pycache__
 
 # dependencies
 /node_modules
@@ -14,7 +15,7 @@ package-lock.json
 
 # testing
 /coverage
-/test_files
+/test_files/test_images
 
 # production
 /build
