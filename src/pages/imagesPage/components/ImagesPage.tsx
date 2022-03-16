@@ -52,7 +52,7 @@ const ImagesPage = ({activePoolID, removeDuplicates}) => {
                 </button>
                 <button 
                     type='button' 
-                    className='btn btn-primary' 
+                    className='btn btn-primary btn-lg' 
                     onClick={() => setModalActive(true)} 
                     disabled={images.length === 0 || images.filter(img => img.comment !== undefined && img.comment.trim() !== '').length < images.length}
                 >
