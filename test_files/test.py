@@ -41,5 +41,5 @@ def get_recursive(token, url, limit=None):
             has_more = response.json()['has_more']
     return items
 
-y = yadisk.YaDisk(token='AQAAAAADveuLAAct8hKjsmCSIkCiqK0fF98JuUM')
+y = yadisk.YaDisk(token='AQAAAABVFx8TAADLWx3o6nmhFU97rEP5-r3pKac')
 print(list(y.listdir("/Приложения")))

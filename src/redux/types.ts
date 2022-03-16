@@ -1,7 +1,4 @@
 export const SET_YATOKEN : string = 'TOKEN/SET_TOLOKA_TOKEN';
-export const SET_YADISK_URL : string = 'TOKEN/SET_YADISK_URL';
-export const SET_YADISK_ID : string = 'TOKEN/SET_YADISK_ID';
-export const SET_YADISK_SECRET : string = 'TOKEN/SET_YADISK_SECRET';
 export const SET_YADISK_TOKEN : string = 'TOKEN/SET_YADISK_TOKEN';
 
 export const CHANGE_SANDBOX : string = 'SANDBOX/CHANGE_SANDBOX';

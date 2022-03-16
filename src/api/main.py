@@ -232,22 +232,3 @@ async def send_checked_tasks(request: Request):
 
     rmtree(IMAGES_FOLDER)
     return body['items']
-
-
-@app.get('/getYaDiskURL')
-def getYaDiskURL(ID: Optional[str] = None, secret: Optional[str] = None):
-    y = yadisk.YaDisk(ID, secret)
-    return y.get_code_url()
-
-
-@app.get('/getYaDiskToken')
-def getYaDiskToken(ID: Optional[str] = None, secret: Optional[str] = None, code: Optional[str] = None):
-    y = yadisk.YaDisk(ID, secret)
-    try:
-        response = y.get_token(code)
-    except yadisk.exceptions.BadRequestError as error:
-        return {'status': 'FAILURE', 'payload': error}
-    y.token = response.access_token
-    if y.check_token():
-        return {'status': 'SUCCESS', 'payload': y.token}
-    return {'status': 'FAILURE', 'payload': 'Failed to check token for validity'}

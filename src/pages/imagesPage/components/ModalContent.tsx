@@ -3,7 +3,6 @@ import SpinnerSendTasksButton from '../../main/components/SpinnerButtons/Spinner
 import {useDispatch, useSelector} from 'react-redux'
 import { sendCheckedTasks } from '../../../redux/actions/imageActions'
 import {RootState} from '../../../index'
-// import YandexForm from './YandexForm'
 import GetPoligonToken from './GetPoligonToken'
 
 const ModalContent = ({images}) => {
