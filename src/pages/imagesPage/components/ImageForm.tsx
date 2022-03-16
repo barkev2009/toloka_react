@@ -26,7 +26,7 @@ const ImageForm = ({rootFolder, imageData}) => {
 
   return (
     <div className='container img-container'>
-      <Modal active={active} setActive={setActive}>
+      <Modal active={active} setActive={setActive} imageModal={true}>
         <img src={rootFolder + imageData.fake_name} alt="Pool Item" className="img-thumbnail img-fluid rounded float-start"/>
       </Modal>
       <div className='col'>

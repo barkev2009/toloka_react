@@ -6,6 +6,7 @@
     top: 0;
     left: 0;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     opacity: 0;
@@ -24,9 +25,15 @@
     background-color: white;
     transform: scale(0.5);
     transition: 0.4s all;
-    width: 80vw;
+    width: max-content;
+    max-width: 80vw;
+    cursor: pointer;
 }
 
 .modal__content.active {
     transform: scale(1);
+}
+
+.modal-img {
+    justify-content: flex-start;
 }
