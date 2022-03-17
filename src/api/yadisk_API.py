@@ -1,29 +1,51 @@
 import posixpath
 import os
 import yadisk
+import requests
+from datetime import datetime
+
+URL = 'https://cloud-api.yandex.net/v1/disk/resources'
+headers = {
+    'Content-Type': 'application/json', 
+    'Accept': 'application/json', 
+    'Authorization': 'OAuth {}'
+}
 
 
-def recursive_upload(y, from_dir, to_dir):
-    for root, dirs, files in os.walk(from_dir):
-        p = root.split(from_dir)[1].strip(os.path.sep)
-        dir_path = posixpath.join(to_dir, p)
+def upload_file(token, load_file, save_folder, replace=False):
+    """
+    Загрузка файла.
+    save_folder: Путь к файлу на Диске
+    load_file: Путь к загружаемому файлу
+    replace: true or false Замена файла на Диске
+    """
+    headers['Authorization'] = headers['Authorization'].format(token)
+
+    save_folder = os.path.join(save_folder, os.path.basename(load_file))
+
+    res = requests.get(f'{URL}/upload?path={save_folder}&overwrite={replace}', headers=headers).json()
+    print(res)
+    with open(load_file, 'rb') as f:
         try:
-            y.mkdir(dir_path)
-        except yadisk.exceptions.PathExistsError:
-            pass
+            print(load_file)
+            requests.put(res['href'], files={'file':f})
+        except KeyError:
+            print(res)
 
-    for file in files:
-        file_path = posixpath.join(dir_path, file)
-        p_sys = p.replace("/", os.path.sep)
-        in_path = os.path.join(from_dir, p_sys, file)
-        try:
-            y.upload(in_path, file_path)
-        except yadisk.exceptions.PathExistsError:
-            pass
+
+def create_folder(token, container_folder_name):
+    headers['Authorization'] = headers['Authorization'].format(token)
+
+    date = str(datetime.now()).split('.')[0].replace(':', '-').replace(' ', '_')
+    folder_name = f'{container_folder_name}/{date}/'
+    try:
+        response = requests.put(URL, headers=headers, params={'path': folder_name})
+    except Exception as e:
+        print(response.json())
+    finally:
+        return folder_name
 
 
 if __name__ == '__main__':
-    y = yadisk.YaDisk(token="<application-token>")
-    to_dir = "/test"
-    from_dir = "/home/ubuntu"
-    recursive_upload(y, from_dir, to_dir)
+    # upload_file('AQAAAABVFx8TAADLWx3o6nmhFU97rEP5-r3pKac', 'public/images/ru.abdab819-05d1-4bbc-a97b-d3619ab93d24.jpg', 'Приложения/')
+    create_folder('AQAAAABVFx8TAADLWx3o6nmhFU97rEP5-r3pKac', 'Приложения/')

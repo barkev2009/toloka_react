@@ -127,7 +127,14 @@ export function changeAllImages(poolId: string, decisionString: string): imageAc
     }
 }
 
-export function sendCheckedTasks(sandbox: boolean, token: string, items: Object[]) {
+export function sendCheckedTasks(
+    sandbox: boolean, 
+    token: string, 
+    items: Object[], 
+    pushToDisk: boolean,
+    yaDiskToken?: string,
+    folderName?: string 
+    ) {
     return async dispatch => {
         dispatch(showSpinner('tasksSending'))
         axios({
@@ -136,7 +143,10 @@ export function sendCheckedTasks(sandbox: boolean, token: string, items: Object[
             data: {
                 sandbox,
                 token,
-                items
+                items,
+                pushToDisk,
+                yaDiskToken,
+                folderName
             }
         }).then(
             response => {
