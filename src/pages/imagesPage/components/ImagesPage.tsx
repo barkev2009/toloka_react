@@ -1,13 +1,10 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { connect, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ImageForm from './ImageForm';
-import '../styles/Images.css';
 import { changeAllImages, checkImageSize, checkNamePattern, checkWhiteArea, removeDuplicates, sendCheckedTasks } from '../../../redux/actions/imageActions';
 import { useDispatch } from 'react-redux';
 import CheckButton from './CheckButton';
-// import Modal from '../../common/Modal';
-// import ModalContent from './ModalContent';
 import {RootState} from '../../../index'
 import SpinnerSendTasksButton from '../../main/components/SpinnerButtons/SpinnerSendTasksButton';
 
@@ -19,7 +16,6 @@ const ImagesPage = ({activePoolID, removeDuplicates}) => {
     const token: any = useSelector<RootState>(state => state.token.yaToken)
     const sandbox: any = useSelector<RootState>(state => state.sandbox.sandboxOn)
 
-    // const [modalActive, setModalActive] = useState(false)
 
     const navigate = useNavigate(); 
     const returnHome = useCallback(
@@ -49,21 +45,10 @@ const ImagesPage = ({activePoolID, removeDuplicates}) => {
     
     return (
         <div className="container-fluid">
-            {/* <Modal active={modalActive} setActive={setModalActive}>
-                <ModalContent images={images}/>
-            </Modal> */}
             <div className="container">
                 <button type='button' className='btn btn-info' onClick={returnHome}>
                     Return home
                 </button>
-                {/* <button 
-                    type='button' 
-                    className='btn btn-dark' 
-                    onClick={() => setModalActive(true)} 
-                    disabled={images.length === 0 || images.filter(img => img.comment !== undefined && img.comment.trim() !== '').length < images.length}
-                >
-                    Send request modal
-                </button> */}
                 <SpinnerSendTasksButton 
                     onClick={sendTasks} 
                     disabled={images.length === 0 || images.filter(img => img.comment !== undefined && img.comment.trim() !== '').length < images.length}

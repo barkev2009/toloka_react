@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { ACCEPT_COMMENT, REJECT_COMMENT } from '../../../constants'
 import { setComment, setDecision } from '../../../redux/actions/imageActions'
-import '../styles/Images.css'
 import Modal from '../../common/Modal';
 
 const ImageForm = ({rootFolder, imageData}) => {

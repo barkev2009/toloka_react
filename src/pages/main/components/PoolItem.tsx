@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import '../styles/PoolItem.css';
 import SpinnerOpenCloseButton from './SpinnerButtons/SpinnerOpenCloseButton';
 import SpinnerImgDownloadButton from './SpinnerButtons/SpinnerImgDownloadButton';
 import { RootState } from '../../..';
+import Modal from '../../common/Modal';
 
-const PoolItem = ({data}) => {
+const PoolItem = ({ data }) => {
 
   const [theme, setTheme] = useState('');
- 
-  const poolImages : any = useSelector<RootState>(state => state.images.images.filter(item => item.details.pool_id === data.id))
+  const [active, setActive] = useState(false);
+  const [tasks, setTasks] = useState([])
+  const taskSchema = Object.keys(data.input_spec).map(key => ({ [key]: data.input_spec[key].type }))
+
+  const poolImages: any = useSelector<RootState>(state => state.images.images.filter(item => item.details.pool_id === data.id))
   const imagesAvailable = poolImages !== undefined ? poolImages.filter(item => item.status === 'SUBMITTED').length : 0
 
 
@@ -31,14 +34,14 @@ const PoolItem = ({data}) => {
       }
     }, [data.status]
   )
-  
- 
+
+
   return (
     <div className={theme}>
-    <div className="card-header">
+      <div className="card-header">
         {data.status}
-    </div>
-    <div className="card-body">
+      </div>
+      <div className="card-body">
         <h5 className="card-title">{data.private_name}</h5>
         <p className="card-text">{`Project Name: ${data.project_name}`}</p>
         <p className="card-text">{`Created on: ${data.created.slice(0, -4).replace('T', ' ')}`}</p>
@@ -46,14 +49,25 @@ const PoolItem = ({data}) => {
         <div className="buttons-container">
           <div className="btn-group" role="group">
             {
-            data.all_tasks_done ? '' : 
-            <SpinnerOpenCloseButton poolData={data}/>
+              data.all_tasks_done ? '' :
+                <SpinnerOpenCloseButton poolData={data} />
             }
-            {imagesAvailable !== 0 ? <SpinnerImgDownloadButton poolID={data.id}/> : <p></p>}
+            {imagesAvailable !== 0 ? <SpinnerImgDownloadButton poolID={data.id} /> : <p></p>}
           </div>
-          <button className='btn-tasks btn btn-outline-info'>Add tasks</button>
+          <button className='btn-tasks btn btn-outline-info' onClick={() => setActive(!active)}>Add tasks</button>
         </div>
-    </div>
+      </div>
+      <Modal active={active} setActive={setActive}>
+        <h3 className='black-text mb10'>Applicable only for tasks with universal features</h3>
+        {taskSchema.map(
+          item =>
+            <div className="input-group mb-3">
+              <span className="input-group-text">{Object.keys(item)}</span>
+              <input type="text" className="form-control" />
+            </div>
+        )}
+        <button className='btn btn-secondary btn-lg'>Add tasks to pool</button>
+      </Modal>
     </div>
   )
 }
