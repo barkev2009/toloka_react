@@ -91,3 +91,15 @@
 .black-text {
     color: black;
 }
+
+.red-text {
+    color: red;
+}
+
+.mb10 {
+    margin-bottom: 10px;
+}
+
+.mt10 {
+    margin-top: 10px;
+}

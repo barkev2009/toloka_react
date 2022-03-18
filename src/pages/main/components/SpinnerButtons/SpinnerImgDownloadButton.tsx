@@ -17,25 +17,9 @@ const SpinnerImgDownloadButton = ({poolID}) => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
         
-    const downloadImage = (sandbox, token, file_id, file_name) => {
-        axios({
-          method: 'GET',
-          url: 'http://127.0.0.1:8000/download_image/',
-          params : {
-            sandbox,
-            token,
-            file_id,
-            file_name
-          },
-        })
-      }
 
     const downloadImages = async () => {
         dispatch(showSpinner(`img_${poolID}`))
-        // poolImages.forEach(img => {
-        //   downloadImage(sandbox, token, img.id, img.fake_name);
-        // });
-
         await axios({
           method: 'POST',
           url: 'http://127.0.0.1:8000/download_images/',

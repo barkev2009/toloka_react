@@ -9,8 +9,11 @@ const PoolItem = ({ data }) => {
 
   const [theme, setTheme] = useState('');
   const [active, setActive] = useState(false);
-  const [tasks, setTasks] = useState([])
   const taskSchema = Object.keys(data.input_spec).map(key => ({ [key]: data.input_spec[key].type }))
+  const [tasks, setTasks] = useState(data.input_spec)
+  const [numTasks, setNumTasks] = useState(0)
+
+console.log(taskSchema)
 
   const poolImages: any = useSelector<RootState>(state => state.images.images.filter(item => item.details.pool_id === data.id))
   const imagesAvailable = poolImages !== undefined ? poolImages.filter(item => item.status === 'SUBMITTED').length : 0
@@ -58,14 +61,27 @@ const PoolItem = ({ data }) => {
         </div>
       </div>
       <Modal active={active} setActive={setActive}>
-        <h3 className='black-text mb10'>Applicable only for tasks with universal features</h3>
+        <h3 className='black-text mb-10'>Applicable only for tasks with universal features</h3>
+        <h5 className='black-text mb-10'>Fields</h5>
         {taskSchema.map(
           item =>
+          <>
+            {tasks[Object.keys(item)[0]].required ? <p className='red-text mb-0'>*Required</p> : <p> </p>}
             <div className="input-group mb-3">
               <span className="input-group-text">{Object.keys(item)}</span>
-              <input type="text" className="form-control" />
+              <input 
+                type="text" 
+                className="form-control"
+                value={tasks[Object.keys(item)[0]].value}
+                onChange={(e) => setTasks({...tasks, [Object.keys(item)[0]]: {...tasks[Object.keys(item)[0]], value: e.target.value}})}
+              />
             </div>
+            </>
         )}
+        <div className="input-group mt-5 mb-3">
+          <span className="input-group-text">Number of tasks</span>
+          <input type="text" className="form-control" value={numTasks} onChange={e => e.target.value === '' ? setNumTasks(0) : setNumTasks(parseInt(e.target.value, 10))}/>
+        </div>
         <button className='btn btn-secondary btn-lg'>Add tasks to pool</button>
       </Modal>
     </div>
