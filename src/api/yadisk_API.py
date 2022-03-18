@@ -33,8 +33,10 @@ def upload_file(token, load_file, save_folder, replace=False):
             print(res)
 
 
-def create_folder(token, container_folder_name):
+def create_date_folder_in_container(token, container_folder_name):
     headers['Authorization'] = headers['Authorization'].format(token)
+
+    create_folder_in_root(token, container_folder_name)
 
     date = str(datetime.now()).split('.')[0].replace(':', '-').replace(' ', '_')
     folder_name = f'{container_folder_name}/{date}/'
@@ -46,6 +48,15 @@ def create_folder(token, container_folder_name):
         return folder_name
 
 
+def create_folder_in_root(token, container_folder_name):
+    headers['Authorization'] = headers['Authorization'].format(token)
+    try:
+        response = requests.put(URL, headers=headers, params={'path': container_folder_name})
+    except Exception as e:
+        print(response.json())
+    
+
+
 if __name__ == '__main__':
     # upload_file('AQAAAABVFx8TAADLWx3o6nmhFU97rEP5-r3pKac', 'public/images/ru.abdab819-05d1-4bbc-a97b-d3619ab93d24.jpg', 'Приложения/')
-    create_folder('AQAAAABVFx8TAADLWx3o6nmhFU97rEP5-r3pKac', 'Приложения/')
+    create_folder_in_root('AQAAAABVFx8TAADLWx3o6nmhFU97rEP5-r3pKac', 'Data from Toloka Pools')

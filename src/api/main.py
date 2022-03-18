@@ -9,7 +9,7 @@ from pydantic import BaseModel
 
 from checks import fname_check, lowest_pix_size, white_pixels_area
 from download_api import get_recursive, process_all_images
-from yadisk_API import create_folder, upload_file
+from yadisk_API import create_date_folder_in_container, upload_file
 
 
 app = FastAPI()
@@ -210,7 +210,7 @@ async def send_checked_tasks(request: Request):
         os.mkdir(ACCEPTED_FOLDER)
     
     if body['pushToDisk']:
-        folder_name = create_folder(body['yaDiskToken'], body['folderName'])
+        folder_name = create_date_folder_in_container(body['yaDiskToken'], body['folderName'])
 
     for item in body['items']:
         url = f'https://toloka.yandex.com/api/v1/assignments/{item["details"]["assignment_id"]}' if body['sandbox'] == False else \
