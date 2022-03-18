@@ -25,6 +25,7 @@
     background-color: white;
     transform: scale(0.5);
     transition: 0.4s all;
+    min-width: 70vw;
     width: max-content;
     max-width: 80vw;
     cursor: pointer;

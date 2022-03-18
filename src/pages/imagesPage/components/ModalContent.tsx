@@ -21,24 +21,29 @@ const ModalContent = ({ images }) => {
 
   return (
     <div className='change-buttons'>
-      <SpinnerSendTasksButton
-        onClick={sendTasks}
-        disabled={images.length === 0 || images.filter(img => img.comment !== undefined && img.comment.trim() !== '').length < images.length}
-      />
-      {yaDiskToken.toString() === 'null' ? <GetPoligonToken /> : <></>}
-      <div className="form-check">
-        <input 
-          className="form-check-input" 
-          type="checkbox" 
-          checked={pushToDisk} 
-          id="flexCheckDefault" 
-          onChange={() => setPushToDisk(pushToDisk ? false : true)}
-          disabled={images.length === 0 || images.filter(img => img.comment !== undefined && img.comment.trim() !== '').length < images.length || !yaDiskToken}
+      <div>
+        <SpinnerSendTasksButton
+          onClick={sendTasks}
+          disabled={images.length === 0 || images.filter(img => img.comment !== undefined && img.comment.trim() !== '').length < images.length}
         />
-          <label className="form-check-label" htmlFor="flexCheckDefault">
-            Push accepted images to Yandex.Disk
-          </label>
       </div>
+      {
+        yaDiskToken.toString() === 'null' ?
+          <GetPoligonToken /> :
+          <div className="form-check">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              checked={pushToDisk}
+              id="flexCheckDefault"
+              onChange={() => setPushToDisk(pushToDisk ? false : true)}
+              disabled={images.length === 0 || images.filter(img => img.comment !== undefined && img.comment.trim() !== '').length < images.length || !yaDiskToken}
+            />
+            <label className="form-check-label" htmlFor="flexCheckDefault">
+              Push accepted images to Yandex.Disk
+            </label>
+          </div>
+      }
     </div>
   )
 }
