@@ -11,12 +11,12 @@ const ModalContent = ({ images }) => {
   const token: any = useSelector<RootState>(state => state.token.yaToken)
   const sandbox: any = useSelector<RootState>(state => state.sandbox.sandboxOn)
   const yaDiskToken: any = useSelector<RootState>(state => state.token.yaDiskToken)
-  // const activePool: any = useSelector<RootState>(state => state.pools.activePool)
   const [pushToDisk, setPushToDisk] = useState(false)
 
 
   const sendTasks = () => {
     dispatch(sendCheckedTasks(sandbox, token, images, pushToDisk, yaDiskToken, 'Data from Toloka Pools'))
+    
   }
 
   return (

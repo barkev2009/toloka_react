@@ -46,7 +46,7 @@ const PoolItem = ({ data }) => {
     let arr = [];
     for (let i = 0; i < numTasks; i++) {
       arr.push(
-        Object.keys(tasks).map(key => ({[key]: tasks[key].value})).reduce((obj, record) => Object.assign(obj, record))
+        Object.keys(tasks).map(key => ({ [key]: tasks[key].value })).reduce((obj, record) => Object.assign(obj, record))
       )
     }
     await axios({
@@ -85,28 +85,30 @@ const PoolItem = ({ data }) => {
         </div>
       </div>
       <Modal active={active} setActive={setActive}>
-        <h3 className='black-text mb-10'>Applicable only for tasks with universal features</h3>
+        <h3 className='black-text'>{`Adding tasks for pool: ${data.private_name}`}</h3>
         <h5 className='black-text mb-10'>Fields</h5>
         {taskSchema.map(
           item =>
-          <>
-            {tasks[Object.keys(item)[0]].required ? <p className='red-text mb-0'>*Required</p> : <p> </p>}
-            <div className="input-group mb-3">
-              <span className="input-group-text">{Object.keys(item)}</span>
-              <input 
-                type="text" 
-                className="form-control"
-                value={tasks[Object.keys(item)[0]].value}
-                onChange={(e) => setTasks({...tasks, [Object.keys(item)[0]]: {...tasks[Object.keys(item)[0]], value: e.target.value}})}
-              />
-            </div>
+            <>
+              {tasks[Object.keys(item)[0]].required ? <p className='red-text mb-0'>*Required</p> : <p> </p>}
+              <div className="input-group mb-3">
+                <span className="input-group-text">{Object.keys(item)}</span>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={tasks[Object.keys(item)[0]].value}
+                  placeholder={tasks[Object.keys(item)[0]].type}
+                  onChange={(e) => setTasks({ ...tasks, [Object.keys(item)[0]]: { ...tasks[Object.keys(item)[0]], value: e.target.value } })}
+                />
+              </div>
             </>
         )}
         <div className="input-group mt-5 mb-3">
           <span className="input-group-text">Number of tasks</span>
-          <input type="text" className="form-control" value={numTasks} onChange={e => e.target.value === '' ? setNumTasks(0) : setNumTasks(parseInt(e.target.value, 10))}/>
+          <input type="text" className="form-control" value={numTasks} onChange={e => e.target.value === '' ? setNumTasks(0) : setNumTasks(parseInt(e.target.value, 10))} />
         </div>
-        <button className='btn btn-secondary btn-lg' onClick={createTasks}>Add tasks to pool</button>
+        <button className='btn btn-secondary btn-lg' onClick={createTasks} disabled={numTasks === 0}>Add tasks to pool</button>
+        <p className='black-text mt-10'>*applicable only for tasks with universal features</p>
       </Modal>
     </div>
   )
