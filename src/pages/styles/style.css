@@ -57,6 +57,7 @@ body {
 .change-buttons {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .check-buttons {
@@ -106,4 +107,16 @@ body {
 
 .mt10 {
     margin-top: 10px;
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+.w-max {
+    width: max-content;
+}
+
+.m0auto {
+    margin: 0 auto;
 }
