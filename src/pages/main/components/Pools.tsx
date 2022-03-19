@@ -9,33 +9,33 @@ import { RootState } from '../../..'
 
 const Pools = () => {
 
-    const dispatch = useDispatch();
-    const pools: any = useSelector<RootState>(state => state.pools.pools)
-    const token: any = useSelector<RootState>(state => state.token.yaToken)
-    const sandbox: any = useSelector<RootState>(state => state.sandbox.sandboxOn)
+  const dispatch = useDispatch();
+  const pools: any = useSelector<RootState>(state => state.pools.pools)
+  const token: any = useSelector<RootState>(state => state.token.yaToken)
+  const sandbox: any = useSelector<RootState>(state => state.sandbox.sandboxOn)
 
-    const navigate = useNavigate();
-  
-    const navToImages = useCallback(
+  const navigate = useNavigate();
+
+  const navToImages = useCallback(
       () => navigate('/images', {replace: true}), []
     )
 
-    const handleGetPools = () => {
-        dispatch(getPools(token, sandbox));
-        dispatch(resetError());
-    };
-    
+  const handleGetPools = () => {
+    dispatch(getPools(token, sandbox));
+    dispatch(resetError());
+  };
+
   return (
     <div className="container-fluid">
-        <div className="container">
-          <SpinnerGetPoolsButton onClick={handleGetPools}/>
-          <button type='button' className='btn btn-info ml-1' onClick={navToImages}>
-            Go to images
-          </button>
-        </div>
-        {pools && pools.length !== 0 ? 
-        pools.map(item => <PoolItem data={item} key={item.id}/>) :
-        <div className="alert alert-primary" role="alert">No pools to display yet</div>}       
+      <div className="container">
+        <SpinnerGetPoolsButton onClick={handleGetPools} />
+        <button type='button' className='btn btn-info ml-1' onClick={navToImages}>
+          Go to images
+        </button>
+      </div>
+      {pools && pools.length !== 0 ?
+        pools.map(item => <PoolItem data={item} key={item.id} />) :
+        <div className="alert alert-primary" role="alert">No pools to display yet</div>}
     </div>
   )
 }
