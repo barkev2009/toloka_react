@@ -4,3 +4,4 @@ redis~=4.1.4
 opencv-python~=4.5.5.62
 Pillow~=9.0.1
 uvicorn
+autotoloka

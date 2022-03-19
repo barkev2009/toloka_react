@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import SpinnerOpenCloseButton from './SpinnerButtons/SpinnerOpenCloseButton';
 import SpinnerImgDownloadButton from './SpinnerButtons/SpinnerImgDownloadButton';
 import { RootState } from '../../..';
 import Modal from '../../common/Modal';
+import axios from 'axios';
+import { getPools } from '../../../redux/actions/poolActions'
 
 const PoolItem = ({ data }) => {
 
@@ -13,9 +15,10 @@ const PoolItem = ({ data }) => {
   const [tasks, setTasks] = useState(data.input_spec)
   const [numTasks, setNumTasks] = useState(0)
 
-console.log(taskSchema)
-
   const poolImages: any = useSelector<RootState>(state => state.images.images.filter(item => item.details.pool_id === data.id))
+  const yaToken: any = useSelector<RootState>(state => state.token.yaToken)
+  const sandbox: any = useSelector<RootState>(state => state.sandbox.sandboxOn)
+  const dispatch = useDispatch()
   const imagesAvailable = poolImages !== undefined ? poolImages.filter(item => item.status === 'SUBMITTED').length : 0
 
 
@@ -38,6 +41,27 @@ console.log(taskSchema)
     }, [data.status]
   )
 
+
+  const createTasks = async () => {
+    let arr = [];
+    for (let i = 0; i < numTasks; i++) {
+      arr.push(
+        Object.keys(tasks).map(key => ({[key]: tasks[key].value})).reduce((obj, record) => Object.assign(obj, record))
+      )
+    }
+    await axios({
+      method: 'POST',
+      url: 'http://127.0.0.1:8000/create_tasks',
+      data: {
+        yaToken,
+        sandbox,
+        poolID: data.id,
+        inputValues: arr
+      }
+    })
+    dispatch(getPools(yaToken, sandbox))
+    setActive(false)
+  }
 
   return (
     <div className={theme}>
@@ -82,7 +106,7 @@ console.log(taskSchema)
           <span className="input-group-text">Number of tasks</span>
           <input type="text" className="form-control" value={numTasks} onChange={e => e.target.value === '' ? setNumTasks(0) : setNumTasks(parseInt(e.target.value, 10))}/>
         </div>
-        <button className='btn btn-secondary btn-lg'>Add tasks to pool</button>
+        <button className='btn btn-secondary btn-lg' onClick={createTasks}>Add tasks to pool</button>
       </Modal>
     </div>
   )

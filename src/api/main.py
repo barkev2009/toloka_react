@@ -9,6 +9,7 @@ import json
 from checks import fname_check, lowest_pix_size, white_pixels_area
 from download_api import get_recursive, process_all_images
 from pydantic import BaseModel
+from autotoloka_min import create_task_suite
 
 
 app = FastAPI()
@@ -36,6 +37,13 @@ class DownloadBody(BaseModel):
     sandbox: bool;
     token: str;
     imageData: list
+
+
+class TasksBody(BaseModel):
+    sandbox: bool;
+    yaToken: str;
+    poolID: str;
+    inputValues: list
 
 
 @app.get("/pools/")
@@ -231,3 +239,8 @@ async def send_checked_tasks(request: Request):
 
     rmtree(IMAGES_FOLDER)
     return body['items']
+
+
+@app.post('/create_tasks')
+def create_tasks(body: TasksBody):
+    create_task_suite(token=body.yaToken, sandbox=body.sandbox, pool_id=body.poolID, input_values=body.inputValues, tasks_on_suite=1)
