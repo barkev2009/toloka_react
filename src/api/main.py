@@ -105,7 +105,7 @@ def open_pool(
             'Authorization': f'OAuth {token}',
         }
     )
-    # print(response.json())
+
     return response.json()
 
 
@@ -118,11 +118,7 @@ def read_image_names():
 def read_images_from_pool(token: Optional[str] = None, sandbox: Optional[str] = None, pool_id: Optional[str] = None):
     url = f'https://toloka.yandex.com/api/v1/attachments?limit=100&pool_id={pool_id}' if sandbox == 'false' else \
         f'https://sandbox.toloka.yandex.com/api/v1/attachments?limit=100&pool_id={pool_id}'
-    # r = Redis()
 
-    # if r.exists(pool_id) == 1:
-    #     return json.loads(r.get(pool_id))
-    # else:
     attachments = get_recursive(token, url, limit=1000)
 
     # Getting assignment statuses
@@ -140,41 +136,13 @@ def read_images_from_pool(token: Optional[str] = None, sandbox: Optional[str] = 
                     }
                 )
 
-    # r.setex(pool_id, 3600, json.dumps(response.json()))
     return {"items": attachments}
-
-
-@app.get('/download_image/')
-def download_image(
-        token: Optional[str] = None,
-        sandbox: Optional[str] = None,
-        file_id: Optional[str] = None,
-        file_name: Optional[str] = None
-):
-    print(sandbox)
-    url = f'https://toloka.yandex.com/api/v1/attachments/{file_id}/download' if sandbox == 'false' else \
-        f'https://sandbox.toloka.yandex.com/api/v1/attachments/{file_id}/download'
-    response = requests.get(
-        url,
-        headers={
-            'Authorization': f'OAuth {token}',
-        }
-    )
-
-    # file_name = f'{file_id}.{file_name.split(".")[-1]}'
-
-    if 'images' not in os.listdir(PUBLIC_FOLDER):
-        os.mkdir(IMAGES_FOLDER)
-    if file_name in os.listdir(IMAGES_FOLDER):
-        print(f'File {file_name} is already in folder')
-    else:
-        with open(os.path.join(IMAGES_FOLDER, file_name), 'wb') as file:
-            file.write(response.content)
 
 
 @app.post('/download_images')
 def download_images(body: DownloadBody):
-    # body = request.json()
+    if len(os.listdir(IMAGES_FOLDER)) != 0:
+        rmtree(IMAGES_FOLDER)
     process_all_images(body.sandbox, body.token, body.imageData, 3, 16)
 
 

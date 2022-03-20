@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import { RootState } from ".";
-import ImagesPage from "./pages/imagesPage/components/ImagesPage";
-import MainPage from "./pages/main/components/MainPage";
+import ImagesPage from "./pages/imagesPage/ImagesPage";
+import MainPage from "./pages/main/MainPage";
 import '../src/pages/styles/style.css'
 
 function App() {

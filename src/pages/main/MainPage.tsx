@@ -1,7 +1,7 @@
 import React from 'react'
-import Pools from './Pools'
-import SandboxSwitch from './SandboxSwitch'
-import TokenForm from './TokenForm'
+import Pools from './components/Pools'
+import SandboxSwitch from './components/SandboxSwitch'
+import TokenForm from './components/TokenForm'
 
 const MainPage = () => {
 

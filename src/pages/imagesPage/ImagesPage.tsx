@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from 'react'
 import { connect, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import ImageForm from './ImageForm';
-import { changeAllImages, checkImageSize, checkNamePattern, checkWhiteArea, removeDuplicates } from '../../../redux/actions/imageActions';
+import ImageForm from './components/ImageForm';
+import { changeAllImages, checkImageSize, checkNamePattern, checkWhiteArea, removeDuplicates } from '../../redux/actions/imageActions';
 import { useDispatch } from 'react-redux';
-import CheckButton from './CheckButton';
-import Modal from '../../common/Modal';
-import ModalContent from './ModalContent';
-import {RootState} from '../../../index'
+import CheckButton from './components/CheckButton';
+import Modal from '../common/Modal';
+import ModalContent from './components/ModalContent';
+import {RootState} from '../../index'
 
 const ImagesPage = ({activePoolID, removeDuplicates}) => {
 
