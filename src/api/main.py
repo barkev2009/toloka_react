@@ -141,7 +141,7 @@ def read_images_from_pool(token: Optional[str] = None, sandbox: Optional[str] = 
 
 @app.post('/download_images')
 def download_images(body: DownloadBody):
-    if len(os.listdir(IMAGES_FOLDER)) != 0:
+    if 'images' in os.listdir(PUBLIC_FOLDER) and len(os.listdir(IMAGES_FOLDER)) != 0:
         rmtree(IMAGES_FOLDER)
     process_all_images(body.sandbox, body.token, body.imageData, 3, 16)
 
