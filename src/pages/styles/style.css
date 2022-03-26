@@ -10,7 +10,7 @@ body {
     top: 0;
     left: 0;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     opacity: 0;
     pointer-events: none;
@@ -122,6 +122,6 @@ body {
     margin: 0 auto;
 }
 
-.align-items-center {
-    align-items: center;
+.modal-img {
+    align-items: flex-start;
 }
