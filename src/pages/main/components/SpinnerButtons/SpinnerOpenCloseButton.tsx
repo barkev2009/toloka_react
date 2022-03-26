@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../..';
 import { openClosePool } from '../../../../redux/actions/poolActions';
-import './../../styles/buttons.css'
 
 const SpinnerOpenCloseButton = ({poolData}) => {
 

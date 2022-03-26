@@ -10,6 +10,9 @@ IMAGES_FOLDER = '../../public/images'
 PUBLIC_FOLDER = '../../public'
 
 def get_recursive(token, url, limit=None):
+    if 'sort=' not in url:
+        url += '&sort=id'
+    print(url)
     items = []
     response = get(
         url,

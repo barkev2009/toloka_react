@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { ACCEPT_COMMENT, REJECT_COMMENT } from '../../../constants'
 import { setComment, setDecision } from '../../../redux/actions/imageActions'
-import '../styles/Images.css'
+import Modal from '../../common/Modal';
 
 const ImageForm = ({rootFolder, imageData}) => {
 
+  const [active, setActive] = useState(false)
   const acceptOption = "option1" + imageData.id
   const rejectOption = "option2" + imageData.id
   const dispatch = useDispatch()
@@ -24,14 +25,18 @@ const ImageForm = ({rootFolder, imageData}) => {
 
   return (
     <div className='container img-container'>
+      <Modal active={active} setActive={setActive} imageModal={true}>
+        <img src={rootFolder + imageData.fake_name} alt="Pool Item" className="img-thumbnail img-fluid rounded float-start"/>
+      </Modal>
       <div className='col'>
         <div className='row'>
           <img 
           src={rootFolder + imageData.fake_name} 
           alt="Pool Item" 
           className="img-thumbnail img-fluid rounded float-start" 
-          style={{width: '400px'}}
+          style={{width: '400px', cursor: 'pointer'}}
           key={imageData}
+          onClick={active ? () => setActive(false) : () => setActive(true)}
           />
           </div>
         <div className='row'>

@@ -1,5 +1,6 @@
 export interface tokenState {
-    yaToken: string
+    yaToken: string,
+    yaDiskToken: string | null
 }
 
 export interface tokenAction {
