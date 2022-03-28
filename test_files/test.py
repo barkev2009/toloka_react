@@ -14,7 +14,8 @@ pools_url = 'https://toloka.yandex.com/api/v1/pools?sort=id&limit=300'
 
 
 def get_recursive(token, url, limit=None):
-    url += '&sort=id'
+    if 'sort=' not in url:
+        url += '&sort=id'
     items = []
     response = get(
         url,
@@ -43,7 +44,9 @@ def get_recursive(token, url, limit=None):
             has_more = response.json()['has_more']
     return items
 
-url = f'https://sandbox.toloka.yandex.com/api/v1/task-suites?limit=100&pool_id=1115729'
-task_suites_resp_items = get_recursive('AQAAAABVFx8TAAIbupmTNSLnLE9ostJWyUWHY-M', url, limit=1000)
-# print(*[item['tasks'][0]['input_values']['product_title'] for item in task_suites_resp_items], sep='\n')
-print(len(task_suites_resp_items))
+
+if __name__ == '__main__':
+    url = f'https://sandbox.toloka.yandex.com/api/v1/task-suites?limit=100&pool_id=1115729'
+    task_suites_resp_items = get_recursive('AQAAAABVFx8TAAIbupmTNSLnLE9ostJWyUWHY-M', url, limit=1000)
+    # print(*[item['tasks'][0]['input_values']['product_title'] for item in task_suites_resp_items], sep='\n')
+    print(len(task_suites_resp_items))
